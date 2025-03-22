@@ -1,5 +1,5 @@
 <template>
-   content of page
+   <h1>HOME</h1>
   </template>
   
   
