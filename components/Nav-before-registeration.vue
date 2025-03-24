@@ -1,0 +1,72 @@
+<template>
+    <div class="container mx-auto">
+        <nav class="flex justify-between items-center py-4">
+            <div>
+                <a href="/" class="logo text-2xl font-bold">Qera'a</a>
+            </div>
+            <div class="links flex items-center">
+                <a href="/" class="px-6 py-2">Home</a>
+                <a href="/books" class="px-6 py-2">Books</a>
+                <a href="/contact" class="px-6 py-2">Contact Us</a>
+            </div>
+            <div class="auth flex items-center">
+                <a href="/login" class="sign px-4 py-2">Sign Up</a>
+                <a href="/signup" class="login px-4 py-2">Login</a>
+            </div>
+        </nav>
+    </div>
+</template>
+
+
+<style>
+.container {
+    background-color: #4E3629;
+}
+
+nav{
+    width: 90%;
+    height: 70px;
+    margin: auto;
+
+}
+
+.logo{
+    font-family: logo;
+    font-size: 40px;
+    font-weight: lighter;
+    color: #FED8B1;
+}
+
+.links a{
+    color: #FFEAD6;
+    font-family: links;
+}
+
+.auth{
+    font-family: links;
+    font-weight:bold;
+}
+.auth .sign{
+    color: #FED8B1;
+    border-radius: 40px;
+    width: 150px;
+    text-align: center;
+}
+
+.sign:hover{
+background-color:#FAD4A2 ;
+color: #4E3629;
+}
+.auth .login{
+    color: #4E3629;
+    background-color: #FAD4A2;
+    border-radius: 40px;
+    width: 150px;
+    text-align: center;
+    margin-left: 5px;
+}
+.login:hover{
+    background-color: #4E3629;
+    color: #FAD4A2;
+}
+</style>
