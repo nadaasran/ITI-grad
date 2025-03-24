@@ -5,9 +5,9 @@
                 <a href="/" class="logo text-2xl font-bold">Qera'a</a>
             </div>
             <div class="links flex items-center">
-                <NuxtLink href="/books" class="px-6 py-2">Books</NuxtLink>
-                <NuxtLink href="/contact" class="px-6 py-2">Contact Us</NuxtLink>
-                <NuxtLink href="/" class="px-6 py-2">Home</NuxtLink>
+                <NuxtLink href="/books" class="px-6 py-2" active-class="active">Books</NuxtLink>
+                <NuxtLink href="/contact" class="px-6 py-2" active-class="active">Contact Us</NuxtLink>
+                <NuxtLink href="/" class="px-6 py-2" active-class="active">Home</NuxtLink>
             </div>
             <div class="auth flex items-center">
                 <a href="/login" class="sign px-4 py-2">Sign Up</a>
@@ -43,6 +43,10 @@ nav{
 }
 .links a:hover{
     color: #FED8B1;
+}
+.active{
+    color: #FED8B1;
+    font-weight: bold;
 }
 
 .auth{

@@ -5,11 +5,11 @@
                 <a href="/" class="logo text-2xl font-bold">Qera'a</a>
             </div>
             <div class="links flex items-center">
-                <NuxtLink href="/" class="px-6 py-2">Home</NuxtLink>
-                <NuxtLink href="/books" class="px-6 py-2">Books</NuxtLink>
-                <NuxtLink href="/plans" class="px-6 py-2">Plans</NuxtLink>
-                <NuxtLink href="/contact" class="px-6 py-2">Contact Us</NuxtLink>
-                <NuxtLink href="/cart" class="px-6 py-2"><FontAwesomeIcon :icon="['fas', 'cart-shopping']" class="cart-icon"/></NuxtLink>
+                <NuxtLink href="/" class="px-5 py-2" active-class="active">Home</NuxtLink>
+                <NuxtLink href="/books" class="px-5 py-2" active-class="active">Books</NuxtLink>
+                <NuxtLink href="/plans" class="px-5 py-2" active-class="active">Plans</NuxtLink>
+                <NuxtLink href="/contact" class="px-5 py-2" active-class="active">Contact Us</NuxtLink>
+                <NuxtLink href="/cart" class="px-5 py-2" active-class="active"><FontAwesomeIcon :icon="['fas', 'cart-shopping']" class="cart-icon"/></NuxtLink>
             </div>
             <div class="search-input">
                 <FontAwesomeIcon :icon="['fas', 'magnifying-glass']" class="search-icon" />
@@ -50,6 +50,10 @@ nav{
 .links a:hover{
     color: #FED8B1;
 }
+.active{
+    color: #FED8B1;
+    font-weight: bold;
+}
 
 .search-input input{
     border: 1px solid #FFEAD6;
@@ -67,7 +71,7 @@ nav{
 
 .search-icon {
   position: absolute;
-  left: 748px; 
+  left: 730px; 
   top: 27px;
   color: #FFEAD6;
   font-size: 16px;
