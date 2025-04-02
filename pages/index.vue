@@ -1,5 +1,11 @@
+<script setup>
+definePageMeta({
+    layout : 'default'
+})
+</script>
+
 <template>
-   content of page
-  </template>
-  
-  
+    <div>
+        Home
+    </div>
+</template>
