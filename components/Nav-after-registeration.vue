@@ -16,12 +16,33 @@
                 <input type="text" placeholder="Search..." class="flex px-4 py-2">
             </div>
             <div class="profile flex items-center">
-                <NuxtLink href="/profile" class="name py-2">Austien Bieber</NuxtLink>
-                <NuxtLink href="/profile" class="image py-2"><img src="/images/Ellipse 1.png"></NuxtLink>
+                <!-- <NuxtLink href="/profile" class="name py-2">Username</NuxtLink>
+                <NuxtLink href="/profile" class="image "><img src="/images/user.jpg"></NuxtLink> -->
+                <NuxtLink v-if="username" :href="`/profile`" class="name py-2">{{ username }}</NuxtLink>
+        <NuxtLink v-if="username" :href="`/profile`" class="image">
+          <img src="/images/user.jpg" />
+        </NuxtLink>
+          <!-- <NuxtLink v-else :href="/login" class="login py-2">Login</NuxtLink> -->
             </div>
         </nav>
     </div>
+   
 </template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+
+const username = ref('');
+
+// عند تحميل الصفحة، استرجاع اسم المستخدم من localStorage
+onMounted(() => {
+  const storedUsername = localStorage.getItem('username');
+  if (storedUsername) {
+    username.value = storedUsername;
+  }
+});
+</script>
+
 
 
 <style>
@@ -56,13 +77,27 @@ nav{
     color: #FED8B1;
 }
 
+.search-input {
+  position: relative;  /* تحديد العنصر الأب ليكون مرجعًا للمكان النسبي */
+  width: 250px; /* يمكنك تغيير العرض حسب الحاجة */
+}
 .search-input input{
+    width:100%;
     border: 1px solid #FFEAD6;
     border-radius: 20px;
     padding: 5px 40px;
+    color: #FFEAD6;
 }
 .search-input input::placeholder{
     color: #FFEAD6;
+}
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px; 
+  transform: translateY(-50%); 
+  color: #FFEAD6;
+  font-size: 16px;
 }
 .cart-icon{
     font-size: 22px;
@@ -70,13 +105,6 @@ nav{
     align-self: center;
 }
 
-.search-icon {
-  position: absolute;
-  left: 730px; 
-  top: 27px;
-  color: #FFEAD6;
-  font-size: 16px;
-}
 input:focus{
     outline: none;
 }
@@ -87,8 +115,9 @@ input:focus{
 }
 
 .profile img{
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
+    margin-left: 10px;
 }
 </style>
