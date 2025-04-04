@@ -99,7 +99,7 @@
             </div>
 
             <div class="flex justify-center">  
-                <button class="w-40 rounded-full border-2 text-xs bg-[#4E3629] text-[#FED8B1] p-4 cursor-pointer">
+                <button @click="checkoutNow" class="w-40 rounded-full border-2 text-xs bg-[#4E3629] text-[#FED8B1] p-4 cursor-pointer">
                     Checkout now
                 </button>
             </div>
@@ -112,42 +112,134 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import cartCard from '~/components/cartCard.vue';
 
-// 🛒 Sample cart items (Replace with Vuex, Pinia, or API call)
-const cartItems = ref([
-    { id: 1, title: "Feel The Nature", author: "Addie Renee", price: 3.88, quantity: 1, image: '/path-to-image.jpg' },
-    { id: 2, title: "Feel The Nature", author: "Addie Renee", price: 3.88, quantity: 1, image: '/path-to-image.jpg' },
-    { id: 3, title: "Feel The Nature", author: "Addie Renee", price: 3.88, quantity: 1, image: '/path-to-image.jpg' }
-]);
-
-const shipping = 1;
+const cartItems = ref([]);
+const shipping = 10; // قيمة ثابتة
+const couponCode = ref("");
+const apiTotal = ref(0);
 
 const subtotal = computed(() => {
-    return cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  return cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0);
 });
 
 const total = computed(() => subtotal.value + shipping);
 
-const couponCode = ref("");
 const applyCoupon = () => {
-    if (couponCode.value === "DISCOUNT10") {
-        alert("Coupon applied! 10% off");
-        cartItems.value = cartItems.value.map(item => ({
-            ...item,
-            price: item.price * 0.9 
-        }));
+  if (couponCode.value === "DISCOUNT10") {
+    alert("Coupon applied! 10% off");
+    cartItems.value = cartItems.value.map(item => ({
+      ...item,
+      price: item.price * 0.9 
+    }));
+  } else {
+    alert("Invalid coupon");
+  }
+};
+
+const checkoutNow = async () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert("You must be logged in to place an order.");
+    return;
+  }
+
+  const payload = {
+    books: cartItems.value.map(item => ({
+      bookId: item.id,
+      quantity: item.quantity
+    }))
+  };
+
+  try {
+    const res = await fetch('http://localhost:5000/orders/', {
+      method: 'POST',
+      headers: {
+        'Authorization': `${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      const result = await res.json();
+      alert("✅ Order placed successfully!");
+      console.log("Order response:", result);
+      cartItems.value = []; // Clear cart if you want
     } else {
-        alert("Invalid coupon");
+      const errorData = await res.json();
+      alert(`❌ Failed to place order: ${errorData.message || res.statusText}`);
     }
+  } catch (err) {
+    console.error("🚨 Error placing order:", err);
+    alert("Something went wrong while placing your order.");
+  }
 };
-const removeItem = (index) => {
-    cartItems.value.splice(index, 1);
+
+
+const removeItem = async (index) => {
+  const token = localStorage.getItem('token');
+  const item = cartItems.value[index];
+
+  try {
+    const res = await fetch(`http://localhost:5000/cart/remove`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        bookId: item.id
+      })
+    });
+
+    if (res.ok) {
+      // إزالة العنصر من الواجهة بعد نجاح الحذف
+      cartItems.value.splice(index, 1);
+    } else {
+      console.error('فشل حذف العنصر من السلة');
+    }
+  } catch (err) {
+    console.error('خطأ في الاتصال بالسيرفر:', err);
+  }
 };
+
+
 const updateQuantity = (index, newQuantity) => {
-    if (newQuantity > 0) {
-        cartItems.value[index].quantity = newQuantity;
-    }
+  if (newQuantity > 0) {
+    cartItems.value[index].quantity = newQuantity;
+  }
 };
+
+onMounted(async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert("No token found in localStorage");
+      return;
+    }
+    const res = await fetch('http://localhost:5000/cart',{
+        method: 'GET',  
+        headers: {
+        'Authorization': `${token}`, // ✅ تمرير التوكين هنا
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await res.json();
+    // تحويل بيانات الـ books إلى cartItems بالشكل المطلوب
+    cartItems.value = data.books.map(book => ({
+      id: book.bookId,
+      title: book.title,
+      price: book.price,
+      quantity: book.quantity,
+      image: book.image // تقدر تستخدم book.image إذا كان موجود
+    }));
+
+    apiTotal.value = data.total;
+
+  } catch (error) {
+    console.error("فشل في تحميل السلة:", error);
+  }
+});
 </script>

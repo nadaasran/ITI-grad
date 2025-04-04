@@ -42,7 +42,7 @@
         <img :src="item.image" class="w-20 h-20 rounded-tl-3xl mr-4">
         <div class="flex-1">
             <h3 class="font-bold">{{ item.title }}</h3>
-            <p>{{ item.author }}</p>
+            <!-- <p>{{ item.author }}</p> -->
             <p>${{ item.price.toFixed(2) }}</p>
         </div>
         <div class="flex flex-col justify-between items-center gap-8">
