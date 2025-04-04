@@ -10,8 +10,8 @@
                 <NuxtLink href="/contact" class="px-6 py-2" active-class="active">Contact Us</NuxtLink>
             </div>
             <div class="auth flex items-center">
-                <a href="/login" class="sign px-4 py-2">Sign Up</a>
-                <a href="/signup" class="login px-4 py-2">Login</a>
+                <a href="/signUp" class="sign px-4 py-2">Sign Up</a>
+                <a href="/login" class="login px-4 py-2">Login</a>
             </div>
         </nav>
     </div>
