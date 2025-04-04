@@ -1,145 +1,92 @@
 <template>
-    <div class="orders-page">
-      <Sidebar />
-      <div class="content">
-        <h1>Orders</h1>
+  <div class="orders-page">
+    <Sidebar />
+    <div class="content">
+      <h1>Orders</h1>
       <div v-if="loading">Loading...</div>
 
-    <!-- <div v-else-if="orders.length === 0" class="empty-orders">
-      <p>No order has been made yet</p>
-      <button @click="browseBooks">Browse Books</button>
-    </div>
-
-    <div v-else class="order-list">
-      <div v-for="order in orders" :key="order.id" class="order-item">
-        <p>Order #{{ order.id }} - Total: ${{ order.total }}</p>
-        <ul>
-          <li v-for="item in order.items" :key="item.id">
-            {{ item.bookTitle }} - {{ item.quantity }}x
-          </li>
-        </ul>
+      <div v-else-if="orders.length === 0" class="empty-orders">
+        <p>No order has been made yet</p>
+        <button class="browse-button" @click="browseBooks">Browse Books</button>
       </div>
-    </div>
-  </div> -->
-    <div v-else-if="orders.length === 0" class="empty-orders">
-      <p>No order has been made yet</p>
-      <button class="browse-button" @click="browseBooks">Browse Books</button>
-    </div>
 
-    <div v-else class="order-list">
-      <div v-for="order in orders" :key="order.id" class="order-item">
-        <p>Order #{{ order.id }} - Total: ${{ order.total }}</p>
-        <ul>
-          <li v-for="item in order.items" :key="item.id">
-            {{ item.bookTitle }} - {{ item.quantity }}x
-          </li>
-        </ul>
+      <div v-else class="order-list">
+        <div v-for="order in orders" :key="order._id" class="order-item">
+          <p>Order #{{ order._id.slice(-5).toUpperCase() }} - Total: ${{ order.total }}</p>
+          <p>Status: {{ order.status }}</p>
+          <ul>
+            <li v-for="item in order.books" :key="item.bookId">
+              {{ item.title }} - {{ item.quantity }}x
+            </li>
+          </ul>
+          <p class="text-gray-400 text-sm">Created At: {{ formatDate(order.createdAt) }}</p>
+        </div>
       </div>
-    </div>
     </div>
   </div>
-  </template>
-  
-  <script setup>
-  import Sidebar from '~/components/Sidebar.vue'
-  definePageMeta({
-    layout: 'registered',
-  });
+</template>
 
-//   import { ref, onMounted } from 'vue';
+<script setup>
+import { ref, onMounted } from 'vue'
+import { navigateTo } from '#app'
+import Sidebar from '~/components/Sidebar.vue'
 
-// const orders = ref([]);
-// const loading = ref(false);
-// const userId = ref(null);
+definePageMeta({
+  layout: 'registered',
+})
 
-// onMounted(() => {
-//   const userData = JSON.parse(localStorage.getItem('user'));
-//   if (userData) {
-//     userId.value = userData.id;
-//     fetchOrders();
-//   } else {
-//     loading.value = false;
-//   }
-// });
-
-// const fetchOrders = async () => {
-//   try {
-//     const response = await fetch(`/api/orders/${userId.value}`);
-//     const data = await response.json();
-//     orders.value = data.orders;
-//   } catch (error) {
-//     console.error("Error fetching orders", error);
-//   } finally {
-//     loading.value = false;
-//   }
-// };
-
-// const browseBooks = () => {
-//   navigateTo('/books');
-// };
-import { ref, onMounted } from 'vue';
-import { useFetch } from '#app';
-
-const orders = ref([]);
-const loading = ref(true);
-const userId = ref(null);
-
-onMounted(async () => {
-  try {
-    const userResponse = await useFetch('/api/auth/me'); // تعديل حسب API المستخدم
-    if (userResponse.data.value) {
-      userId.value = userResponse.data.value.id;
-      fetchOrders();
-    } else {
-      loading.value = false;
-    }
-  } catch (error) {
-    console.error("Error fetching user data", error);
-    loading.value = false;
-  }
-});
+const orders = ref([])
+const loading = ref(true)
 
 const fetchOrders = async () => {
   try {
-    const response = await useFetch(`/api/orders/${userId.value}`);
-    if (response.data.value) {
-      orders.value = response.data.value.orders;
+    const res = await fetch('http://localhost:5000/api/orders/my-orders', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+
+    const data = await res.json()
+
+    if (res.ok) {
+      orders.value = data
+    } else {
+      console.error('Error fetching orders:', data.message || 'Unknown error')
     }
   } catch (error) {
-    console.error("Error fetching orders", error);
+    console.error('Error fetching orders:', error)
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
+
+onMounted(() => {
+  fetchOrders()
+})
 
 const browseBooks = () => {
-  navigateTo('/books');
-};
-  </script>
-  
-  <!-- <style scoped>
-  .profile-page {
-    background-color: #FFF7EF;
-    display: flex;
-  }
-  .content {
-    flex: 1;
-    padding: 20px;
-  }
-  </style>
-   -->
+  navigateTo('/books')
+}
+
+const formatDate = (date) => {
+  return new Date(date).toLocaleDateString()
+}
+
+</script>
 
 <style scoped>
 .orders-page {
   padding: 50px;
-  background: #fdf6ee; /* لون الخلفية الأساسي */
+  background: #fdf6ee;
   height: 100%;
   display: flex;
 }
 
-h1{
-  margin:10px 320px;
-  color: #4E3629;
+h1 {
+  margin: 10px 320px;
+  color: #4e3629;
   font-size: 24px;
   font-weight: bold;
 }
@@ -153,8 +100,7 @@ h1{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* max-width: 600px; */
-  margin:0px auto;
+  margin: 0px auto;
 }
 
 .browse-button {
