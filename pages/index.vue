@@ -1,24 +1,20 @@
-<template>
-   <div>
-      <hero />
-      <bookcard />
-      <bookcard />
-      <bookcard />
-      <about />
-      <author />
-      <trend />
-      <Footer />
-   </div>
-   <SubscriptionCard />
+<script setup>
+definePageMeta({
+    layout : 'default',
+    layout : 'default'
+})
+</script>
 
+<template>
+<<<<<<< HEAD
+   content of page
+   <bookcard />
+=======
+   <h1>HOME</h1>
+>>>>>>> 909915205c36f198d5f5366f980a07d8033beebf
   </template>
    <script setup>
-   import hero from '@/components/hero.vue'
-    import bookcard from '@/components/bookcard.vue'
-    import author from '@/components/author.vue'
-    import trend from '@/components/trend.vue'
-   import SubscriptionCard from '@/components/Subscription Card.vue'
-
-
+   import bookcard from '@/components/bookcard.vue'
    </script>
+  
   
