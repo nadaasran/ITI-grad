@@ -4,8 +4,9 @@
       <Nav-before-registeration/>
       <!-- <author /> -->
       <slot /> <!-- This is where the page content will be injected -->
+      <!-- <author /> -->
       <Footer />
-    </div>
+  </div>
   </template>
   
   <script setup>
