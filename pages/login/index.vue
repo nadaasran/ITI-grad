@@ -88,7 +88,7 @@ const handleSubmit = async () => {
 
     localStorage.setItem('token', data.token);
 
-    router.push('/');
+    router.push('/logged');
   } catch (error) {
     errorMessage.value = 'An unexpected error occurred. Please try again!';
   }
