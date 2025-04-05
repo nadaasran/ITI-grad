@@ -26,6 +26,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, onMounted } from 'vue'
 import { navigateTo } from '#app'
