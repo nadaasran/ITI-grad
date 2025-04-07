@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div class="signup-container">
       <div class="signup-box">
         <div class="signup-form">
@@ -9,7 +9,7 @@
           </button>
   
           <div class="divider">OR</div>
-          <!-- <form @submit.prevent="handleSubmit">
+          <form @submit.prevent="handleSubmit">
     <div>
       <label>Name*</label>
       <input type="text" v-model="name" placeholder="Enter your name" />
@@ -30,7 +30,7 @@
     </div>
     <button type="submit" class="signup-btn">Sign Up</button>
     <span v-if="errorMessage" class="error">{{ errorMessage }}</span>
-  </form> -->
+  </form> 
   
           <form @submit.prevent="handleSubmit">
             <label>Name*</label>
@@ -65,8 +65,8 @@
         </div>
       </div>
     </div>
-  </template>
-
+  </template> -->
+<!-- 
   <script setup>
 
 import { ref } from 'vue';
@@ -206,9 +206,9 @@ const loginWithGoogle = async () => {
     alert('Error during Google login');
   }
 };
-  </script>  
+  </script>   -->
 
-   <template>
+  <template>
     <div class="signup-container">
       <div class="signup-box">
         <div class="signup-form">
@@ -379,34 +379,40 @@ const loginWithGoogle = async () => {
   </script>
   
   <style scoped>
- .error-message {
-  color: red;
-  font-size: 14px;
-  margin-top: 4px;
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
-  max-height: 50px;
-}
-
-.error-message:empty {
-  opacity: 0;
-  max-height: 0;
-}
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 4px;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
+    max-height: 50px;
+  }
+  
+  .error-message:empty {
+    opacity: 0;
+    max-height: 0;
+  }
+  
+  .error {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    display: block;
+    text-align: center;
+  }
+  
   .signup-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: #4e342e; /* بني غامق مثل الصورة */
-    background: #4e342e; 
+    background: #4e342e;
     color: #2e1e1e;
     font-family: "Arial", sans-serif;
   }
   
   .signup-box {
-    background: #fdf6e3; /* بيج فاتح مثل الصورة */
-  .signup-box {
-    background: #fdf6e3; 
+    background: #fdf6e3;
     display: flex;
     padding: 20px;
     border-radius: 20px;
@@ -430,33 +436,29 @@ const loginWithGoogle = async () => {
   }
   
   .google-btn {
-  background:  #FAD4A2;
-  color: #3e2723;
-  padding: 12px;
-  width: 100%;
-  border: none;
-  border-radius:40px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.google-btn:hover {
-    color:#FAD4A2 ;
-    background-color: #4E3629;
-}
+    background: #fad4a2;
+    color: #3e2723;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .google-btn:hover {
+    color: #fad4a2;
+    background-color: #4e3629;
+  }
   
-  .google-btn .google-icon {
+  .google-icon {
     font-size: 18px;
     color: #3e2723;
   }
-
-.google-icon {
-  font-size: 18px;
-}
   
   .divider {
     margin: 15px 0;
@@ -489,6 +491,7 @@ const loginWithGoogle = async () => {
     font-size: 14px;
     margin-top: 10px;
     font-weight: bold;
+    color: #3e2723;
   }
   
   input {
@@ -497,15 +500,15 @@ const loginWithGoogle = async () => {
     border: 1px solid #b29583;
     border-radius: 40px;
     margin-top: 5px;
-    background:none;
+    background: none;
+    color: #3e2723;
   }
   
   .terms {
     display: flex;
-
-    justify-content:flex-start;
+    justify-content: flex-start;
     font-size: 16px;
-    margin-top: 15px; 
+    margin-top: 15px;
     color: #3e2723;
   }
   
@@ -514,17 +517,16 @@ const loginWithGoogle = async () => {
     cursor: pointer;
     width: 16px;
     background-color: #8d6e63;
-   
   }
-  span{
+  
+  span {
     margin-left: 5px;
     margin-top: 5px;
   }
   
   .signup-btn {
     background: #3e2723;
-    color: #FAD4A2;
-    font-family: links;
+    color: #fad4a2;
     padding: 12px;
     width: 100%;
     border: none;
@@ -536,8 +538,9 @@ const loginWithGoogle = async () => {
   }
   
   .signup-btn:hover {
-    background-color:#FAD4A2 ;
-    color: #4E3629;  }
+    background-color: #fad4a2;
+    color: #4e3629;
+  }
   
   .login-link {
     font-size: 13px;

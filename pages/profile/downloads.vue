@@ -3,21 +3,12 @@
     <Sidebar />
     <div class="content">
       <h1>Downloads</h1>
+
       <div v-if="loading">Loading...</div>
 
       <div v-else-if="downloads.length === 0" class="empty-downloads">
         <p>No downloads available yet</p>
         <button class="browse-button" @click="browseBooks">Browse Books</button>
-      </div>
-
-      <div v-else class="download-list">
-        <div v-for="book in downloads" :key="book.id" class="download-item">
-          <p>{{ book.title }}</p>
-          <button class="download-button" @click="downloadBook(book.fileUrl)">
-            Download
-          </button>
-      <div v-else-if="downloads.length === 0" class="empty">
-        <p>No downloads available</p>
       </div>
 
       <div v-else class="download-list">
@@ -35,7 +26,8 @@
   </div>
 </template>
 
-<script setup>
+
+<!-- <script setup>
 import Sidebar from '~/components/Sidebar.vue';
 definePageMeta({
   layout: 'registered',
@@ -90,8 +82,9 @@ const downloadBook = (fileUrl) => {
   link.click();
   document.body.removeChild(link);
 };
-</script>
+</script> -->
 
+<script setup>
 import { ref, onMounted } from 'vue'
 import Sidebar from '~/components/Sidebar.vue'
 

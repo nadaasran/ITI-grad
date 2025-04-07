@@ -7,12 +7,4 @@ definePageMeta({
 
 <template>
    content of page
-  <h1>home</h1>
-    
 </template>
-
-
-<template>
-   content of page
-  
-  </template>

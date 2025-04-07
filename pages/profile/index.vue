@@ -3,6 +3,7 @@
     <Sidebar />
     <div class="content">
       <h1>Orders</h1>
+
       <div v-if="loading">Loading...</div>
 
       <div v-else-if="orders.length === 0" class="empty-orders">
@@ -26,7 +27,6 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted } from 'vue'
 import { navigateTo } from '#app'
@@ -42,7 +42,6 @@ const loading = ref(true)
 const fetchOrders = async () => {
   try {
     const res = await fetch('http://localhost:5000/api/orders/my-orders', {
-    const res = await fetch('http://localhost:5000/orders/my-orders', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -75,8 +74,8 @@ const browseBooks = () => {
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString()
 }
-
 </script>
+
 
 <style scoped>
 .orders-page {
