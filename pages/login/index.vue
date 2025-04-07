@@ -149,7 +149,8 @@ const loginWithGoogle = async () => {
 
           <button type="submit" class="login-btn">Log In</button>
         </form>
-
+        
+        <NuxtLink to="/forgot-password" class="forgot-password-link">Forgot Password?</NuxtLink>
         <p class="signup-link">
           Don't have an account? <NuxtLink to="/signup">Sign Up</NuxtLink>
         </p>
@@ -378,14 +379,26 @@ const loginWithGoogle = async () => {
   
   .signup-link {
     font-size: 13px;
-    margin-top: 15px;
+    margin-top: -20px;
     color: #8d6e63;
+    display: flex;
+    justify-content: start;
   }
   
   .signup-link a {
     color: #5d4037;
     font-weight: bold;
-    text-decoration: none;
+    text-decoration: underline;
+  }
+
+  .forgot-password-link{
+    font-size: 13px;
+    text-decoration: underline;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+    color: #5d4037;
+    font-weight: bold;
   }
   
   .illustration {
