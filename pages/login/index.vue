@@ -1,4 +1,5 @@
 <template>
+<!-- <template>
     <div class="login-container">
       <div class="login-box">
 
@@ -122,6 +123,125 @@ const loginWithGoogle = async () => {
   }
 };
 </script>
+
+</script> -->
+
+<template>
+  <div class="login-container">
+    <div class="login-box">
+      <div class="login-form">
+        <h2>Welcome Back to Qera'a</h2>
+
+        <button @click="loginWithGoogle" class="google-btn">
+          <FontAwesomeIcon :icon="['fab', 'google']" class="google-icon" />
+          Continue with Google
+        </button>
+
+        <div class="divider">OR</div>
+
+        <form @submit.prevent="handleSubmit">
+          <label>Email*</label>
+          <input v-model="auth.email" type="email" placeholder="Enter your e-mail" required />
+          <p v-if="emailError" class="error-message">{{ emailError }}</p>
+
+          <label>Password*</label>
+          <input v-model="auth.password" type="password" placeholder="Enter your password" required />
+          <p v-if="passwordError" class="error-message">{{ passwordError }}</p>
+
+          <p v-if="auth.errorMessage" class="error-message">{{ auth.errorMessage }}</p>
+
+          <button type="submit" class="login-btn">Log In</button>
+        </form>
+        
+        <NuxtLink to="/forgot-password" class="forgot-password-link">Forgot Password?</NuxtLink>
+        <p class="signup-link">
+          Don't have an account? <NuxtLink to="/signup">Sign Up</NuxtLink>
+        </p>
+      </div>
+
+      <div class="illustration">
+        <img src="/images/continuee.png" alt="Book Illustration" />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
+import { ref } from 'vue'
+
+const auth = useAuthStore()
+const router = useRouter()
+
+const emailError = ref('')
+const passwordError = ref('')
+
+const validateEmail = () => {
+  emailError.value = !auth.email ? 'This field is required' : ''
+}
+
+const validatePassword = () => {
+  passwordError.value = !auth.password ? 'This field is required' : ''
+}
+
+const handleSubmit = async () => {
+  validateEmail()
+  validatePassword()
+
+  if (emailError.value || passwordError.value) return
+
+  try {
+    const res = await fetch('http://localhost:5000/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: auth.email, password: auth.password }),
+    })
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      auth.setError(data.message || 'Invalid email or password')
+      return
+    }
+
+    auth.setToken(data.token)
+    auth.setError('')
+    router.push('/logged')
+  } catch (error) {
+    auth.setError('An unexpected error occurred. Please try again!')
+  }
+}
+
+const loginWithGoogle = async () => {
+  try {
+    const auth2 = await gapi.auth2.init({
+      client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
+    })
+
+    const googleUser = await auth2.signIn()
+    const idToken = googleUser.getAuthResponse().id_token
+
+    const res = await fetch('http://localhost:5000/auth/google', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken }),
+    })
+
+    const data = await res.json()
+
+    if (data.success) {
+      auth.setToken(data.token)
+      router.push('/')
+    } else {
+      auth.setError(data.message || 'Google login failed!')
+    }
+  } catch (error) {
+    auth.setError('Error during Google login')
+  }
+}
+</script>
+
 
   
   <style scoped>
@@ -264,12 +384,27 @@ const loginWithGoogle = async () => {
     font-size: 13px;
     margin-top: 15px;
     color: #8d6e63;
+    margin-top: -20px;
+    color: #8d6e63;
+    display: flex;
+    justify-content: start;
   }
   
   .signup-link a {
     color: #5d4037;
     font-weight: bold;
     text-decoration: none;
+    text-decoration: underline;
+  }
+
+  .forgot-password-link{
+    font-size: 13px;
+    text-decoration: underline;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+    color: #5d4037;
+    font-weight: bold;
   }
   
   .illustration {

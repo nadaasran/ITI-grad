@@ -9,7 +9,7 @@
           </button>
   
           <div class="divider">OR</div>
-          <form @submit.prevent="handleSubmit">
+          <!-- <form @submit.prevent="handleSubmit">
     <div>
       <label>Name*</label>
       <input type="text" v-model="name" placeholder="Enter your name" />
@@ -30,9 +30,9 @@
     </div>
     <button type="submit" class="signup-btn">Sign Up</button>
     <span v-if="errorMessage" class="error">{{ errorMessage }}</span>
-  </form>
+  </form> -->
   
-          <!-- <form @submit.prevent="handleSubmit">
+          <form @submit.prevent="handleSubmit">
             <label>Name*</label>
             <input v-model="name" type="text" placeholder="Enter your name" @blur="validateName" required />
             <p v-if="nameError" class="error-message">{{ nameError }}</p>
@@ -53,14 +53,13 @@
             <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
   
             <button type="submit" class="signup-btn">Sign Up</button>
-          </form> -->
+          </form> 
   
           <p class="login-link">
             Already have an account? <NuxtLink to="/login">Log In</NuxtLink>
           </p>
         </div>
   
-        <!-- قسم صورة الكتاب -->
         <div class="illustration">
           <img src="/images/startt.png" alt="Book Illustration" />
         </div>
@@ -70,74 +69,13 @@
 
   <script setup>
 
-// import { ref } from 'vue'; 
-// import { useRouter } from 'vue-router';
-
-// const name = ref('');
-// const email = ref('');
-// const password = ref('');
-// const agree = ref(false);
-// const errorMessage = ref('');
-// const nameError = ref('');
-// const emailError = ref('');
-// const passwordError = ref('');
-
-// const router = useRouter();
-
-// const validateName = () => {
-//   if (!name.value) {
-//     nameError.value = 'Name is required';
-//   } else {
-//     nameError.value = '';
-//   }
-// };
-
-// const validateField = (field) => {
-//   if (field === 'email' && !email.value) {
-//     emailError.value = 'Email is required';
-//   } else {
-//     emailError.value = '';
-//   }
-// };
-
-// const validatePassword = () => {
-//   if (!password.value) {
-//     passwordError.value = 'Password is required';
-//   } else {
-//     passwordError.value = '';
-//   }
-// };
-
-// const handleSubmit = async () => {
-//   try {
-//     const res = await fetch("http://localhost:5000/auth/register", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({
-//         username: name.value, 
-//         email: email.value,
-//         password: password.value,
-//       }),
-//     });
-
-//     const data = await res.json();
-//     console.log("Server Response:", data);
-
-//     if (!res.ok) {
-//       console.error("Server Error:", data);
-//       errorMessage.value = data.message || "Error signing up!";
-//       return;
-//     }
-
-//     router.push("/login");
-//   } catch (error) {
-//     console.error("Fetch Error:", error);
-//     errorMessage.value = "An unexpected error occurred. Please try again!";
-//   }
-// };
-
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth'
+const auth = useAuthStore()
+
 
 const name = ref('');
 const email = ref('');
@@ -268,8 +206,177 @@ const loginWithGoogle = async () => {
     alert('Error during Google login');
   }
 };
-  </script>
+  </script>  
+
+   <template>
+    <div class="signup-container">
+      <div class="signup-box">
+        <div class="signup-form">
+          <h2>Get started with Qera'a</h2>
+          <button @click="loginWithGoogle" class="google-btn">
+            <FontAwesomeIcon :icon="['fab', 'google']" class="google-icon" />
+            Continue with Google
+          </button>
   
+          <div class="divider">OR</div>
+  
+          <form @submit.prevent="handleSubmit">
+            <div>
+              <label>Name*</label>
+              <input type="text" v-model="auth.name" placeholder="Enter your name" />
+              <span v-if="nameError" class="error-message">{{ nameError }}</span>
+            </div>
+            <div>
+              <label>Email*</label>
+              <input type="email" v-model="auth.email" placeholder="Enter your email" />
+              <span v-if="emailError" class="error-message">{{ emailError }}</span>
+            </div>
+            <div>
+              <label>Password*</label>
+              <input type="password" v-model="auth.password" placeholder="Enter your password" />
+              <span v-if="passwordError" class="error-message">{{ passwordError }}</span>
+            </div>
+            <div class="terms">
+              <input type="checkbox" v-model="auth.agree" /> I agree to all terms, privacy policy
+            </div>
+            <button type="submit" class="signup-btn">Sign Up</button>
+            <span v-if="auth.errorMessage" class="error">{{ auth.errorMessage }}</span>
+          </form>
+  
+          <p class="login-link">
+            Already have an account? <NuxtLink to="/login">Log In</NuxtLink>
+          </p>
+        </div>
+  
+        <div class="illustration">
+          <img src="/images/startt.png" alt="Book Illustration" />
+        </div>
+      </div>
+    </div>
+  </template>
+  
+  <script setup>
+  import { useAuthStore } from '@/stores/auth'
+  import { useRouter } from 'vue-router'
+  import { ref } from 'vue'
+  
+  const auth = useAuthStore()
+  const router = useRouter()
+  
+  const nameError = ref('')
+  const emailError = ref('')
+  const passwordError = ref('')
+  
+  const validateName = () => {
+    if (!auth.name) {
+      nameError.value = 'Name is required'
+    } else if (auth.name.length < 3) {
+      nameError.value = 'Name must be at least 3 characters long'
+    } else if (!/^[a-zA-Z\s]+$/.test(auth.name)) {
+      nameError.value = 'Name can only contain letters and spaces'
+    } else if (auth.name.length > 20) {
+      nameError.value = 'Name cannot exceed 20 characters'
+    } else {
+      nameError.value = ''
+    }
+  }
+  
+  const validateField = (field) => {
+    if (field === 'email' && !auth.email) {
+      emailError.value = 'Email is required'
+    } else if (field === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(auth.email)) {
+      emailError.value = 'Email is not valid'
+    } else if (field === 'email' && auth.email.length > 50) {
+      emailError.value = 'Email cannot exceed 50 characters'
+    } else {
+      emailError.value = ''
+    }
+  }
+  
+  const validatePassword = () => {
+    if (!auth.password) {
+      passwordError.value = 'Password is required'
+    } else if (auth.password.length < 6) {
+      passwordError.value = 'Password must be at least 6 characters long'
+    } else if (!/[A-Z]/.test(auth.password)) {
+      passwordError.value = 'Password must contain at least one uppercase letter'
+    } else if (!/[a-z]/.test(auth.password)) {
+      passwordError.value = 'Password must contain at least one lowercase letter'
+    } else if (!/[0-9]/.test(auth.password)) {
+      passwordError.value = 'Password must contain at least one number'
+    } else if (!/[!@#$%^&*]/.test(auth.password)) {
+      passwordError.value = 'Password must contain at least one special character'
+    } else {
+      passwordError.value = ''
+    }
+  }
+  
+  const handleSubmit = async () => {
+    validateName()
+    validatePassword()
+    validateField('email')
+  
+    if (nameError.value || passwordError.value || emailError.value) return
+  
+    if (!auth.agree) {
+      auth.setError("You must agree to the terms!")
+      return
+    }
+  
+    try {
+      const res = await fetch("http://localhost:5000/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: auth.name,
+          email: auth.email,
+          password: auth.password,
+        }),
+      })
+  
+      const data = await res.json()
+  
+      if (!res.ok) {
+        auth.setError(data.message || "Error signing up!")
+        return
+      }
+  
+      localStorage.setItem('username', auth.name)
+      auth.reset()
+      router.push("/login")
+    } catch (error) {
+      auth.setError("An unexpected error occurred. Please try again!")
+    }
+  }
+  
+  const loginWithGoogle = async () => {
+    try {
+      const auth2 = await gapi.auth2.init({
+        client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
+      })
+  
+      const googleUser = await auth2.signIn()
+      const idToken = googleUser.getAuthResponse().id_token
+  
+      const res = await fetch('http://localhost:5000/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken }),
+      })
+  
+      const data = await res.json()
+  
+      if (data.success) {
+        localStorage.setItem('token', data.token)
+        router.push('/')
+      } else {
+        auth.setError(data.message || 'Google login failed!')
+      }
+    } catch (error) {
+      auth.setError('Error during Google login')
+    }
+  }
+  </script>
   
   <style scoped>
  .error-message {
@@ -291,13 +398,15 @@ const loginWithGoogle = async () => {
     align-items: center;
     height: 100vh;
     background: #4e342e; /* بني غامق مثل الصورة */
+    background: #4e342e; 
     color: #2e1e1e;
     font-family: "Arial", sans-serif;
   }
   
-  /* 📜 تصميم الـ Card بنفس الشكل */
   .signup-box {
     background: #fdf6e3; /* بيج فاتح مثل الصورة */
+  .signup-box {
+    background: #fdf6e3; 
     display: flex;
     padding: 20px;
     border-radius: 20px;
@@ -374,7 +483,6 @@ const loginWithGoogle = async () => {
     right: 0;
   }
   
-  /* 📝 المدخلات */
   label {
     display: block;
     text-align: left;

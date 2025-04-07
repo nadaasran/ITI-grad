@@ -10,3 +10,9 @@ definePageMeta({
   <h1>home</h1>
     
 </template>
+
+
+<template>
+   content of page
+  
+  </template>

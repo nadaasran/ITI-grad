@@ -16,6 +16,19 @@
           <button class="download-button" @click="downloadBook(book.fileUrl)">
             Download
           </button>
+      <div v-else-if="downloads.length === 0" class="empty">
+        <p>No downloads available</p>
+      </div>
+
+      <div v-else class="download-list">
+        <div v-for="order in downloads" :key="order._id" class="download-item">
+          <ul>
+            <li v-for="item in order.books" :key="item.bookId">
+              {{ item.title }} - {{ item.quantity }}x
+              <a :href="getDownloadLink(item.bookId)" class="download-link" download>Download</a>
+            </li>
+          </ul>
+          <p class="text-gray-400 text-sm">Purchased At: {{ formatDate(order.createdAt) }}</p>
         </div>
       </div>
     </div>
@@ -78,6 +91,48 @@ const downloadBook = (fileUrl) => {
   document.body.removeChild(link);
 };
 </script>
+
+import { ref, onMounted } from 'vue'
+import Sidebar from '~/components/Sidebar.vue'
+
+definePageMeta({
+  layout: 'registered',
+})
+
+const downloads = ref([])
+const loading = ref(true)
+
+const fetchDownloads = async () => {
+  try {
+    const res = await fetch('http://localhost:5000/orders/downloads', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+    const data = await res.json()
+    if (res.ok) {
+      downloads.value = data
+    } else {
+      console.error('Error fetching downloads:', data.message)
+    }
+  } catch (err) {
+    console.error('Error:', err)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchDownloads()
+})
+
+const formatDate = (date) => new Date(date).toLocaleDateString()
+
+const getDownloadLink = (bookId) => {
+  return `http://localhost:5000/api/books/download/${bookId}`
+}
+</script>
+
 
 <style scoped>
 .downloads-page {
