@@ -2,6 +2,7 @@
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
+  modules: ['@pinia/nuxt'],
   app:{
     head: {
     script: [

@@ -5,17 +5,19 @@
       <h1>Downloads</h1>
       <div v-if="loading">Loading...</div>
 
-      <div v-else-if="downloads.length === 0" class="empty-downloads">
-        <p>No downloads available yet</p>
-        <button class="browse-button" @click="browseBooks">Browse Books</button>
+      <div v-else-if="downloads.length === 0" class="empty">
+        <p>No downloads available</p>
       </div>
 
       <div v-else class="download-list">
-        <div v-for="book in downloads" :key="book.id" class="download-item">
-          <p>{{ book.title }}</p>
-          <button class="download-button" @click="downloadBook(book.fileUrl)">
-            Download
-          </button>
+        <div v-for="order in downloads" :key="order._id" class="download-item">
+          <ul>
+            <li v-for="item in order.books" :key="item.bookId">
+              {{ item.title }} - {{ item.quantity }}x
+              <a :href="getDownloadLink(item.bookId)" class="download-link" download>Download</a>
+            </li>
+          </ul>
+          <p class="text-gray-400 text-sm">Purchased At: {{ formatDate(order.createdAt) }}</p>
         </div>
       </div>
     </div>
@@ -23,61 +25,47 @@
 </template>
 
 <script setup>
-import Sidebar from '~/components/Sidebar.vue';
+import { ref, onMounted } from 'vue'
+import Sidebar from '~/components/Sidebar.vue'
+
 definePageMeta({
   layout: 'registered',
-});
+})
 
-import { ref, onMounted } from 'vue';
-import { useFetch } from '#app';
-
-const downloads = ref([]);
-const loading = ref(true);
-const userId = ref(null);
-
-onMounted(async () => {
-  try {
-    // استرجاع بيانات المستخدم من API بدل `localStorage`
-    const userResponse = await useFetch('/api/auth/me'); // تأكد من المسار الصحيح في API الخاص بك
-    if (userResponse.data.value) {
-      userId.value = userResponse.data.value.id;
-      fetchDownloads();
-    } else {
-      loading.value = false;
-    }
-  } catch (error) {
-    console.error("Error fetching user data", error);
-    loading.value = false;
-  }
-});
+const downloads = ref([])
+const loading = ref(true)
 
 const fetchDownloads = async () => {
   try {
-    const response = await useFetch(`/api/downloads/${userId.value}`);
-    if (response.data.value) {
-      downloads.value = response.data.value.books;
+    const res = await fetch('http://localhost:5000/orders/downloads', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+    const data = await res.json()
+    if (res.ok) {
+      downloads.value = data
+    } else {
+      console.error('Error fetching downloads:', data.message)
     }
-  } catch (error) {
-    console.error('Error fetching downloads', error);
+  } catch (err) {
+    console.error('Error:', err)
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
-const browseBooks = () => {
-  navigateTo('/books');
-};
+onMounted(() => {
+  fetchDownloads()
+})
 
-// تحميل الكتب
-const downloadBook = (fileUrl) => {
-  const link = document.createElement('a');
-  link.href = fileUrl;
-  link.download = fileUrl.split('/').pop();
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
+const formatDate = (date) => new Date(date).toLocaleDateString()
+
+const getDownloadLink = (bookId) => {
+  return `http://localhost:5000/api/books/download/${bookId}`
+}
 </script>
+
 
 <style scoped>
 .downloads-page {
