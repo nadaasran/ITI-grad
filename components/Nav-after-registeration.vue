@@ -31,6 +31,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+
+// عند تحميل الصفحة، استرجاع اسم المستخدم من localStorage
+
 const username = ref('');
 
 onMounted(() => {

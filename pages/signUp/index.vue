@@ -30,7 +30,9 @@
     </div>
     <button type="submit" class="signup-btn">Sign Up</button>
     <span v-if="errorMessage" class="error">{{ errorMessage }}</span>
+
   </form>
+
           <p class="login-link">
             Already have an account? <NuxtLink to="/login">Log In</NuxtLink>
           </p>
@@ -41,11 +43,13 @@
         </div>
       </div>
     </div>
-  </template>
-
+  </template> -->
+<!-- 
   <script setup>
+
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { useAuthStore } from '@/stores/auth'
 const auth = useAuthStore()
 
@@ -179,8 +183,117 @@ const loginWithGoogle = async () => {
     alert('Error during Google login');
   }
 };
-  </script>
+  </script>   -->
+
+  <template>
+    <div class="signup-container">
+      <div class="signup-box">
+        <div class="signup-form">
+          <h2>Get started with Qera'a</h2>
+          <button @click="loginWithGoogle" class="google-btn">
+            <FontAwesomeIcon :icon="['fab', 'google']" class="google-icon" />
+            Continue with Google
+          </button>
   
+          <div class="divider">OR</div>
+  
+          <form @submit.prevent="handleSubmit">
+            <div>
+              <label>Name*</label>
+              <input type="text" v-model="auth.name" placeholder="Enter your name" />
+              <span v-if="nameError" class="error-message">{{ nameError }}</span>
+            </div>
+            <div>
+              <label>Email*</label>
+              <input type="email" v-model="auth.email" placeholder="Enter your email" />
+              <span v-if="emailError" class="error-message">{{ emailError }}</span>
+            </div>
+            <div>
+              <label>Password*</label>
+              <input type="password" v-model="auth.password" placeholder="Enter your password" />
+              <span v-if="passwordError" class="error-message">{{ passwordError }}</span>
+            </div>
+            <div class="terms">
+              <input type="checkbox" v-model="auth.agree" /> I agree to all terms, privacy policy
+            </div>
+            <button type="submit" class="signup-btn">Sign Up</button>
+            <span v-if="auth.errorMessage" class="error">{{ auth.errorMessage }}</span>
+          </form>
+  
+          <p class="login-link">
+            Already have an account? <NuxtLink to="/login">Log In</NuxtLink>
+          </p>
+        </div>
+  
+        <div class="illustration">
+          <img src="/images/startt.png" alt="Book Illustration" />
+        </div>
+      </div>
+    </div>
+  </template>
+  
+  <script setup>
+  import { useAuthStore } from '@/stores/auth'
+  import { useRouter } from 'vue-router'
+  import { ref } from 'vue'
+  
+  const auth = useAuthStore()
+  const router = useRouter()
+  
+  const nameError = ref('')
+  const emailError = ref('')
+  const passwordError = ref('')
+  
+  const validateName = () => {
+    if (!auth.name) {
+      nameError.value = 'Name is required'
+    } else if (auth.name.length < 3) {
+      nameError.value = 'Name must be at least 3 characters long'
+    } else if (!/^[a-zA-Z\s]+$/.test(auth.name)) {
+      nameError.value = 'Name can only contain letters and spaces'
+    } else if (auth.name.length > 20) {
+      nameError.value = 'Name cannot exceed 20 characters'
+    } else {
+      nameError.value = ''
+    }
+  }
+  
+  const validateField = (field) => {
+    if (field === 'email' && !auth.email) {
+      emailError.value = 'Email is required'
+    } else if (field === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(auth.email)) {
+      emailError.value = 'Email is not valid'
+    } else if (field === 'email' && auth.email.length > 50) {
+      emailError.value = 'Email cannot exceed 50 characters'
+    } else {
+      emailError.value = ''
+    }
+  }
+  
+  const validatePassword = () => {
+    if (!auth.password) {
+      passwordError.value = 'Password is required'
+    } else if (auth.password.length < 6) {
+      passwordError.value = 'Password must be at least 6 characters long'
+    } else if (!/[A-Z]/.test(auth.password)) {
+      passwordError.value = 'Password must contain at least one uppercase letter'
+    } else if (!/[a-z]/.test(auth.password)) {
+      passwordError.value = 'Password must contain at least one lowercase letter'
+    } else if (!/[0-9]/.test(auth.password)) {
+      passwordError.value = 'Password must contain at least one number'
+    } else if (!/[!@#$%^&*]/.test(auth.password)) {
+      passwordError.value = 'Password must contain at least one special character'
+    } else {
+      passwordError.value = ''
+    }
+  }
+  
+  const handleSubmit = async () => {
+    validateName()
+    validatePassword()
+    validateField('email')
+  
+
    -->
 
    <template>
@@ -290,7 +403,7 @@ const loginWithGoogle = async () => {
     validateName()
     validatePassword()
     validateField('email')
-  
+ 
     if (nameError.value || passwordError.value || emailError.value) return
   
     if (!auth.agree) {
@@ -354,30 +467,41 @@ const loginWithGoogle = async () => {
   </script>
   
   <style scoped>
- .error-message {
-  color: red;
-  font-size: 14px;
-  margin-top: 4px;
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
-  max-height: 50px;
-}
-
-.error-message:empty {
-  opacity: 0;
-  max-height: 0;
-}
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 4px;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
+    max-height: 50px;
+  }
+  
+  .error-message:empty {
+    opacity: 0;
+    max-height: 0;
+  }
+  
+  .error {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    display: block;
+    text-align: center;
+  }
+  
   .signup-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+
     background: #4e342e; 
     color: #2e1e1e;
     font-family: "Arial", sans-serif;
   }
   
   .signup-box {
+
     background: #fdf6e3; 
     display: flex;
     padding: 20px;
@@ -402,33 +526,29 @@ const loginWithGoogle = async () => {
   }
   
   .google-btn {
-  background:  #FAD4A2;
-  color: #3e2723;
-  padding: 12px;
-  width: 100%;
-  border: none;
-  border-radius:40px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.google-btn:hover {
-    color:#FAD4A2 ;
-    background-color: #4E3629;
-}
+    background: #fad4a2;
+    color: #3e2723;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .google-btn:hover {
+    color: #fad4a2;
+    background-color: #4e3629;
+  }
   
-  .google-btn .google-icon {
+  .google-icon {
     font-size: 18px;
     color: #3e2723;
   }
-
-.google-icon {
-  font-size: 18px;
-}
   
   .divider {
     margin: 15px 0;
@@ -461,6 +581,7 @@ const loginWithGoogle = async () => {
     font-size: 14px;
     margin-top: 10px;
     font-weight: bold;
+    color: #3e2723;
   }
   
   input {
@@ -469,15 +590,15 @@ const loginWithGoogle = async () => {
     border: 1px solid #b29583;
     border-radius: 40px;
     margin-top: 5px;
-    background:none;
+    background: none;
+    color: #3e2723;
   }
   
   .terms {
     display: flex;
-
-    justify-content:flex-start;
+    justify-content: flex-start;
     font-size: 16px;
-    margin-top: 15px; 
+    margin-top: 15px;
     color: #3e2723;
   }
   
@@ -486,17 +607,16 @@ const loginWithGoogle = async () => {
     cursor: pointer;
     width: 16px;
     background-color: #8d6e63;
-   
   }
-  span{
+  
+  span {
     margin-left: 5px;
     margin-top: 5px;
   }
   
   .signup-btn {
     background: #3e2723;
-    color: #FAD4A2;
-    font-family: links;
+    color: #fad4a2;
     padding: 12px;
     width: 100%;
     border: none;
@@ -508,8 +628,9 @@ const loginWithGoogle = async () => {
   }
   
   .signup-btn:hover {
-    background-color:#FAD4A2 ;
-    color: #4E3629;  }
+    background-color: #fad4a2;
+    color: #4e3629;
+  }
   
   .login-link {
     font-size: 13px;

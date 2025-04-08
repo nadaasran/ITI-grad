@@ -3,6 +3,7 @@
     <Sidebar />
     <div class="content">
       <h1>Downloads</h1>
+
       <div v-if="loading">Loading...</div>
 
       <div v-else-if="downloads.length === 0" class="empty">
@@ -23,6 +24,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -53,6 +55,7 @@ const fetchDownloads = async () => {
   } finally {
     loading.value = false
   }
+
 }
 
 onMounted(() => {

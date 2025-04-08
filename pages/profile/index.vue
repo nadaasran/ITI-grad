@@ -3,6 +3,7 @@
     <Sidebar />
     <div class="content">
       <h1>Orders</h1>
+
       <div v-if="loading">Loading...</div>
 
       <div v-else-if="orders.length === 0" class="empty-orders">
@@ -73,8 +74,8 @@ const browseBooks = () => {
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString()
 }
-
 </script>
+
 
 <style scoped>
 .orders-page {
