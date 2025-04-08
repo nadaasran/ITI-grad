@@ -41,7 +41,7 @@ const loading = ref(true)
 
 const fetchOrders = async () => {
   try {
-    const res = await fetch('http://localhost:5000/api/orders/my-orders', {
+    const res = await fetch('http://localhost:5000/orders/my-orders', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
