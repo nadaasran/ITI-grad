@@ -1,6 +1,7 @@
 <template>
     <div>
       <Nav-before-registeration/>
+
       <slot /> <!-- This is where the page content will be injected -->
       <!-- <author /> -->
       <!-- <Footer /> -->
