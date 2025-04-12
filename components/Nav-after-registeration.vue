@@ -54,7 +54,6 @@ onMounted(() => {
 <script setup>
 import { useAuthStore } from '~/stores/auth'
 import { onMounted, computed, watch } from 'vue'
-
 const auth = useAuthStore()
 
 // استخدام computed للوصول إلى القيم الحالية

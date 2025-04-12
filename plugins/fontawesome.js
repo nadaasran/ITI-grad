@@ -12,8 +12,6 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faFacebook, faInstagram, faTwitter, faGithub } from '@fortawesome/free-brands-svg-icons'
 
 
-
-
 library.add(faGoogle);
 library.add(faCartShopping);
 library.add(faMagnifyingGlass);

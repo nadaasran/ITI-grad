@@ -53,7 +53,6 @@
 
 <template>
     <div class="flex gap-2 w-full my-18 mx-5">
-        <!-- Left side: Cart items -->
         <div class="w-1/2">
             <cartCard 
                 v-for="(item, index) in cartItems" 
@@ -64,7 +63,6 @@
             />
         </div>
 
-        <!-- Right side: Cart totals -->
         <div class="w-1/2 me-10 pr-10 pl-5">
             <div>
                 <h2 class="mb-5 font-bold text-2xl text-center">Cart totals</h2>
@@ -110,6 +108,7 @@
         </div>
     </div>
 </template>
+
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
