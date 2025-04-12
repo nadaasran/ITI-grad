@@ -2,8 +2,7 @@
 
 <template>
    content of page
-  
-  </template>
+</template>
 
   
   

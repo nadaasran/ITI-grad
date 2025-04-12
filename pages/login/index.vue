@@ -141,9 +141,25 @@ const loginWithGoogle = async () => {
           <input v-model="auth.email" type="email" placeholder="Enter your e-mail" required />
           <p v-if="emailError" class="error-message">{{ emailError }}</p>
 
-          <label>Password*</label>
+          <!-- <label>Password*</label>
           <input v-model="auth.password" type="password" placeholder="Enter your password" required />
-          <p v-if="passwordError" class="error-message">{{ passwordError }}</p>
+          <p v-if="passwordError" class="error-message">{{ passwordError }}</p> -->
+          <div class="password-wrapper">
+  <label>Password*</label>
+  <div class="password-input-container">
+    <input
+      :type="showPassword ? 'text' : 'password'"
+      v-model="auth.password"
+      placeholder="Enter your password"
+    />
+    <FontAwesomeIcon
+      :icon="showPassword ? ['fas', 'eye-slash'] : ['fas', 'eye']"
+      class="eye-icon"
+      @click="togglePasswordVisibility"
+    />
+  </div>
+  <span v-if="passwordError" class="error-message">{{ passwordError }}</span>
+</div>
 
           <p v-if="auth.errorMessage" class="error-message">{{ auth.errorMessage }}</p>
 
@@ -164,12 +180,18 @@ const loginWithGoogle = async () => {
 </template>
 
 <script setup>
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '~/stores/auth'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 
 const auth = useAuthStore()
 const router = useRouter()
+
+const showPassword = ref(false)
+
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value
+}
 
 const emailError = ref('')
 const passwordError = ref('')
@@ -204,7 +226,7 @@ const handleSubmit = async () => {
 
     auth.setToken(data.token)
     auth.setError('')
-    router.push('/logged')
+    router.push('/')
   } catch (error) {
     auth.setError('An unexpected error occurred. Please try again!')
   }
@@ -244,8 +266,13 @@ const loginWithGoogle = async () => {
   <style scoped>
   .error-message {
     color: red;
-    font-size: 14px;
-    margin-top: 4px;
+  font-size: 14px;
+  margin-top: 4px;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
+  max-height: 50px;
+  display: flex;
+  justify-content: left;
   }
   .error-message:empty {
   opacity: 0;
@@ -357,6 +384,28 @@ const loginWithGoogle = async () => {
     margin-top: 5px;
     background: none;
   }
+  .password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-container input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 16px;
+  top: 40%;
+  cursor: pointer;
+  color: #3e2723;
+  /* font-size: 18px; */
+  width: 20px;
+  height: 15px;
+
+}
   
   .login-btn {
     background: #3e2723;

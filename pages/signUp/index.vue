@@ -180,7 +180,6 @@ const loginWithGoogle = async () => {
   }
 };
   </script>
-  
    -->
 
    <template>
@@ -206,13 +205,27 @@ const loginWithGoogle = async () => {
               <input type="email" v-model="auth.email" placeholder="Enter your email" />
               <span v-if="emailError" class="error-message">{{ emailError }}</span>
             </div>
-            <div>
-              <label>Password*</label>
-              <input type="password" v-model="auth.password" placeholder="Enter your password" />
-              <span v-if="passwordError" class="error-message">{{ passwordError }}</span>
-            </div>
+            <div class="password-wrapper">
+  <label>Password*</label>
+  <div class="password-input-container">
+    <input
+      :type="showPassword ? 'text' : 'password'"
+      v-model="auth.password"
+      placeholder="Enter your password"
+    />
+    <FontAwesomeIcon
+      :icon="showPassword ? ['fas', 'eye-slash'] : ['fas', 'eye']"
+      class="eye-icon"
+      @click="togglePasswordVisibility"
+    />
+  </div>
+  <span v-if="passwordError" class="error-message">{{ passwordError }}</span>
+</div>
             <div class="terms">
-              <input type="checkbox" v-model="auth.agree" /> I agree to all terms, privacy policy
+              <input type="checkbox" v-model="auth.agree" /> 
+              <span>
+                I agree to all terms, privacy policy
+              </span>
             </div>
             <button type="submit" class="signup-btn">Sign Up</button>
             <span v-if="auth.errorMessage" class="error">{{ auth.errorMessage }}</span>
@@ -238,6 +251,10 @@ const loginWithGoogle = async () => {
   const auth = useAuthStore()
   const router = useRouter()
   
+const showPassword = ref(false)
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value
+}
   const nameError = ref('')
   const emailError = ref('')
   const passwordError = ref('')
@@ -315,6 +332,8 @@ const loginWithGoogle = async () => {
         auth.setError(data.message || "Error signing up!")
         return
       }
+      const token = data.token.split(" ")[1]; // إزالة "Bearer"
+      localStorage.setItem("token", token);
   
       localStorage.setItem('username', auth.name)
       auth.reset()
@@ -325,33 +344,36 @@ const loginWithGoogle = async () => {
   }
   
   const loginWithGoogle = async () => {
-    try {
-      const auth2 = await gapi.auth2.init({
-        client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
-      })
-  
-      const googleUser = await auth2.signIn()
-      const idToken = googleUser.getAuthResponse().id_token
-  
-      const res = await fetch('http://localhost:5000/auth/google', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken }),
-      })
-  
-      const data = await res.json()
-  
-      if (data.success) {
-        localStorage.setItem('token', data.token)
-        router.push('/')
-      } else {
-        auth.setError(data.message || 'Google login failed!')
-      }
-    } catch (error) {
-      auth.setError('Error during Google login')
+  try {
+    const auth2 = await gapi.auth2.init({
+      client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // Make sure this is correct
+    })
+
+    const googleUser = await auth2.signIn()
+    const idToken = googleUser.getAuthResponse().id_token
+
+    const res = await fetch('http://localhost:5000/auth/google', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken }),
+    })
+
+    const data = await res.json()
+
+    if (data.success) {
+      localStorage.setItem('token', data.token)
+      router.push('/')
+    } else {
+      auth.setError(data.message || 'Google login failed!')
     }
+  } catch (error) {
+    auth.setError('Error during Google login')
+    console.error("Google login error:", error) // To debug any issues
   }
+}
   </script>
+
+
   
   <style scoped>
  .error-message {
@@ -361,6 +383,9 @@ const loginWithGoogle = async () => {
   opacity: 1;
   transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
   max-height: 50px;
+  display: flex;
+  justify-content: left;
+
 }
 
 .error-message:empty {
@@ -400,6 +425,29 @@ const loginWithGoogle = async () => {
     margin-bottom: 20px;
     color: #3e2723;
   }
+  .password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-container input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 16px;
+  top: 40%;
+  cursor: pointer;
+  color: #3e2723;
+  /* font-size: 18px; */
+  width: 20px;
+  height: 15px;
+
+}
+
   
   .google-btn {
   background:  #FAD4A2;
@@ -474,7 +522,6 @@ const loginWithGoogle = async () => {
   
   .terms {
     display: flex;
-
     justify-content:flex-start;
     font-size: 16px;
     margin-top: 15px; 
@@ -485,7 +532,7 @@ const loginWithGoogle = async () => {
     margin-right: 5px;
     cursor: pointer;
     width: 16px;
-    background-color: #8d6e63;
+    background: none;
    
   }
   span{
@@ -509,7 +556,8 @@ const loginWithGoogle = async () => {
   
   .signup-btn:hover {
     background-color:#FAD4A2 ;
-    color: #4E3629;  }
+    color: #4E3629; 
+   }
   
   .login-link {
     font-size: 13px;

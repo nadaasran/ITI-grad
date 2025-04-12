@@ -9,7 +9,7 @@
   
           <form @submit.prevent="sendCode">
             <label>Verification Code*</label>
-            <input v-model="auth.email" type="email" placeholder="Enter your e-mail" required />
+            <input v-model="auth.email" type="email" required />
             <p v-if="emailError" class="error-message">{{ emailError }}</p>
             <p v-if="auth.errorMessage" class="error-message">{{ auth.errorMessage }}</p>
   
@@ -130,7 +130,8 @@
   }
   
   input {
-    width: 100%;
+    width: 40%;
+    float: left;
     padding: 10px;
     border: 1px solid #b29583;
     border-radius: 40px;
