@@ -30,7 +30,9 @@
     </div>
     <button type="submit" class="signup-btn">Sign Up</button>
     <span v-if="errorMessage" class="error">{{ errorMessage }}</span>
+
   </form>
+
           <p class="login-link">
             Already have an account? <NuxtLink to="/login">Log In</NuxtLink>
           </p>
@@ -41,11 +43,13 @@
         </div>
       </div>
     </div>
-  </template>
-
+  </template> -->
+<!-- 
   <script setup>
+
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { useAuthStore } from '@/stores/auth'
 const auth = useAuthStore()
 
@@ -307,7 +311,7 @@ const togglePasswordVisibility = () => {
     validateName()
     validatePassword()
     validateField('email')
-  
+ 
     if (nameError.value || passwordError.value || emailError.value) return
   
     if (!auth.agree) {
@@ -397,12 +401,14 @@ const togglePasswordVisibility = () => {
     justify-content: center;
     align-items: center;
     height: 100vh;
+
     background: #4e342e; 
     color: #2e1e1e;
     font-family: "Arial", sans-serif;
   }
   
   .signup-box {
+
     background: #fdf6e3; 
     display: flex;
     padding: 20px;
@@ -450,33 +456,29 @@ const togglePasswordVisibility = () => {
 
   
   .google-btn {
-  background:  #FAD4A2;
-  color: #3e2723;
-  padding: 12px;
-  width: 100%;
-  border: none;
-  border-radius:40px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.google-btn:hover {
-    color:#FAD4A2 ;
-    background-color: #4E3629;
-}
+    background: #fad4a2;
+    color: #3e2723;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .google-btn:hover {
+    color: #fad4a2;
+    background-color: #4e3629;
+  }
   
-  .google-btn .google-icon {
+  .google-icon {
     font-size: 18px;
     color: #3e2723;
   }
-
-.google-icon {
-  font-size: 18px;
-}
   
   .divider {
     margin: 15px 0;
@@ -509,6 +511,7 @@ const togglePasswordVisibility = () => {
     font-size: 14px;
     margin-top: 10px;
     font-weight: bold;
+    color: #3e2723;
   }
   
   input {
@@ -517,14 +520,15 @@ const togglePasswordVisibility = () => {
     border: 1px solid #b29583;
     border-radius: 40px;
     margin-top: 5px;
-    background:none;
+    background: none;
+    color: #3e2723;
   }
   
   .terms {
     display: flex;
     justify-content:flex-start;
     font-size: 16px;
-    margin-top: 15px; 
+    margin-top: 15px;
     color: #3e2723;
   }
   
@@ -535,15 +539,15 @@ const togglePasswordVisibility = () => {
     background: none;
    
   }
-  span{
+  
+  span {
     margin-left: 5px;
     margin-top: 5px;
   }
   
   .signup-btn {
     background: #3e2723;
-    color: #FAD4A2;
-    font-family: links;
+    color: #fad4a2;
     padding: 12px;
     width: 100%;
     border: none;

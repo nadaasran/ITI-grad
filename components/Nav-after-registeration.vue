@@ -51,6 +51,15 @@ onMounted(() => {
 })
 </script> -->
 
+<!-- <script setup>
+import { useAuthStore } from '~/stores/auth'
+import { onMounted, computed  } from 'vue'
+
+const auth = useAuthStore()
+
+const username = computed(() => auth.name || localStorage.getItem('username'))
+const profileImage = computed(() => auth.profileImage || '/images/user.png')
+=======
 <script setup>
 import { useAuthStore } from '~/stores/auth'
 import { onMounted, computed, watch } from 'vue'
