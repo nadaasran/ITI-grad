@@ -147,7 +147,7 @@ const updateProfile = async () => {
         <div class="profile-image-section">
           <label for="imageUpload">
             <img :src="imagePreview || '/images/user.jpg'" class="profile-image" />
-            <span class="edit-icon"><FontAwesomeIcon icon="fa-solid fa-pen" />
+            <span ><FontAwesomeIcon class="edit-icon" icon="fa-solid fa-pen" />
             </span>
           </label>
           <input type="file" id="imageUpload" accept="image/*" @change="handleImageChange" hidden />
@@ -349,7 +349,7 @@ h1 {
   bottom: 0;
   right: 5px;
   background-color: #4e3629;
-  color: white;
+  color:  #FFEAD6;
   border-radius:50%;
   font-size: 10px;
   padding: 7px;

@@ -261,9 +261,8 @@ const loginWithGoogle = async () => {
 }
 </script>
 
-</script> -->
 
-<template>
+<!-- <template>
   <div class="login-container">
     <div class="login-box">
       <div class="login-form">
@@ -377,7 +376,7 @@ const loginWithGoogle = async () => {
     auth.setError('Error during Google login')
   }
 }
-</script>
+</script> -->
 
 
 

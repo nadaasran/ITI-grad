@@ -10,7 +10,7 @@
                 <NuxtLink href="/plans" class="px-5 py-2" active-class="active">Plans</NuxtLink>
                 <NuxtLink href="/contact" class="px-5 py-2" active-class="active">Contact Us</NuxtLink>
                 <NuxtLink href="/cart" class="px-5 py-2" active-class="active"><FontAwesomeIcon :icon="['fas', 'cart-shopping']" class="cart-icon"/></NuxtLink>
-                <NuxtLink href="/favourites" class="px-5 py-2" active-class="active"><FontAwesomeIcon :icon="['fas', 'heart']" class="heart-icon"/></NuxtLink>
+                <NuxtLink href="/favourites" class="px-5 py-2" active-class="active"><FontAwesomeIcon :icon="['fas', 'heart']"  class="heart-icon"/></NuxtLink>
             </div>
             <div class="search-input">
                 <FontAwesomeIcon :icon="['fas', 'magnifying-glass']" class="search-icon" />
@@ -49,18 +49,98 @@ onMounted(() => {
  
 
 })
-</script> -->
+</script>  -->
 
-<!-- <script setup>
-import { useAuthStore } from '~/stores/auth'
-import { onMounted, computed  } from 'vue'
+<style>
+.container {
+    background-color: #4E3629;
+}
 
-const auth = useAuthStore()
+nav{
+    width: 90%;
+    height: 70px;
+    margin: auto;
 
-const username = computed(() => auth.name || localStorage.getItem('username'))
-const profileImage = computed(() => auth.profileImage || '/images/user.png')
-=======
-<script setup>
+}
+
+.logo{
+    font-family: logo;
+    font-size: 40px;
+    font-weight: lighter;
+    color: #FED8B1;
+}
+
+.links {
+    color: #FFEAD6;
+    font-family: links;
+}
+.active {
+  color: #FED8B1;
+  font-weight: bold;
+}
+
+.links a:hover {
+    color: #FED8B1;
+}
+
+.search-input {
+  position: relative; 
+  width: 250px; 
+}
+.search-input input{
+    width:100%;
+    border: 1px solid #FFEAD6;
+    border-radius: 20px;
+    padding: 5px 40px;
+    color: #FFEAD6;
+}
+.search-input input::placeholder{
+    color: #FFEAD6;
+}
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px; 
+  transform: translateY(-50%); 
+  color: #FFEAD6;
+  font-size: 16px;
+}
+.cart-icon{
+    font-size: 22px;
+    display: flex;
+    align-self: center;
+    color: #FFEAD6;
+}
+.heart-icon{
+    font-size: 22px;
+    display: flex;
+    align-self: center;
+    color: #FFEAD6;
+}
+
+.cart-icon:hover, .heart-icon:hover{
+    color: #FED8B1;
+}
+
+input:focus{
+    outline: none;
+}
+
+.profile{
+    font-family: links;
+    color: #FFEAD6;
+}
+
+.profile img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 10px;
+}
+</style>
+
+  <script setup>
+
 import { useAuthStore } from '~/stores/auth'
 import { onMounted, computed, watch } from 'vue'
 const auth = useAuthStore()
@@ -94,86 +174,4 @@ onMounted(() => {
   }
 })
 </script>
-
-
-<style>
-.container {
-    background-color: #4E3629;
-}
-
-nav{
-    width: 90%;
-    height: 70px;
-    margin: auto;
-
-}
-
-.logo{
-    font-family: logo;
-    font-size: 40px;
-    font-weight: lighter;
-    color: #FED8B1;
-}
-
-.links {
-    color: #FFEAD6;
-    font-family: links;
-}
-.active {
-  color: #FED8B1;
-  font-weight: bold;
-}
-
-.links a:hover{
-    color: #FED8B1;
-}
-
-.search-input {
-  position: relative; 
-  width: 250px; 
-}
-.search-input input{
-    width:100%;
-    border: 1px solid #FFEAD6;
-    border-radius: 20px;
-    padding: 5px 40px;
-    color: #FFEAD6;
-}
-.search-input input::placeholder{
-    color: #FFEAD6;
-}
-.search-icon {
-  position: absolute;
-  top: 50%;
-  left: 10px; 
-  transform: translateY(-50%); 
-  color: #FFEAD6;
-  font-size: 16px;
-}
-.cart-icon{
-    font-size: 22px;
-    display: flex;
-    align-self: center;
-}
-.heart-icon{
-    font-size: 22px;
-    display: flex;
-    align-self: center;
-}
-
-input:focus{
-    outline: none;
-}
-
-.profile{
-    font-family: links;
-    color: #FFEAD6;
-}
-
-.profile img{
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-left: 10px;
-}
-</style>
+ 

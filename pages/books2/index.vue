@@ -28,11 +28,11 @@
                 <a class="underline font-normal text-xl font-['Montserrat']" href="">View more</a>
             </div>
             <div class="flex justify-between">
-                <card/>
-                <card/>
-                <card/>
-                <card/>
-                <card/>
+                <Card/>
+                <Card/>
+                <Card/>
+                <Card/>
+                <Card/>
             </div>
         </div>
         <div>
@@ -45,11 +45,11 @@
                 <a class="underline font-['Montserrat'] font-normal text-xl" href="">View more</a>
             </div>
             <div class="flex justify-between">
-                <card/>
-                <card/>
-                <card/>
-                <card/>
-                <card/>
+                <Card/>
+                <Card/>
+                <Card/>
+                <Card/>
+                <Card/>
             </div>
         </div>
         <div>
@@ -62,11 +62,11 @@
                 <a class="underline font-['Montserrat'] font-normal text-xl" href="">View more</a>
             </div>
             <div class="flex justify-between">
-                <card/>
-                <card/>
-                <card/>
-                <card/>
-                <card/>
+                <Card/>
+                <Card/>
+                <Card/>
+                <Card/>
+                <Card/>
             </div>
         </div>
         <div>
@@ -79,11 +79,11 @@
                 <a class="underline font-['Montserrat'] font-normal text-xl" href="">View more</a>
             </div>
             <div class="flex justify-between">
-                <card/>
-                <card/>
-                <card/>
-                <card/>
-                <card/>
+                <Card/>
+                <Card/>
+                <Card/>
+                <Card/>
+                <Card/>
             </div>
         </div>
         <div>

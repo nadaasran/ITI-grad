@@ -62,10 +62,5 @@
    color: #4E3629;
  }
  </style>
-   content of page
-
-  
-  </template>
-
   
   

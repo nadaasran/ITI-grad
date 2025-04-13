@@ -6,7 +6,7 @@
           </div>
       
           <div class="favorites flex flex-wrap gap-5">
-            <Card
+            <Favcard
               v-for="item in favourites"
               :key="item.id"
               :book="item"
@@ -40,7 +40,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import Card from '~/components/Card.vue'
+import Favcard from '~/components/Favcard.vue'
 
 const favourites = ref([
   { id: 1, title: 'Feel The Nature', price: 3.88 },
