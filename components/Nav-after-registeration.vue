@@ -7,48 +7,56 @@
             <div class="links flex items-center">
                 <NuxtLink href="/" class="px-3 py-5" active-class="active">Home</NuxtLink>
                 <NuxtLink href="/books" class="px-5 py-2" active-class="active">Books</NuxtLink>
-                <NuxtLink href="/plans" class="px-5 py-2" active-class="active">Plans</NuxtLink>
-                <NuxtLink href="/contact" class="px-5 py-2" active-class="active">Contact Us</NuxtLink>
+                <NuxtLink href="/#plans" class="px-5 py-2">Plans</NuxtLink>
+                <NuxtLink href="/#contact" class="px-5 py-2" >Contact Us</NuxtLink>
                 <NuxtLink href="/cart" class="px-5 py-2" active-class="active"><FontAwesomeIcon :icon="['fas', 'cart-shopping']" class="cart-icon"/></NuxtLink>
+                <NuxtLink href="/favourites" class="px-5 py-2" active-class="active"><FontAwesomeIcon :icon="['fas', 'heart']"  class="heart-icon"/></NuxtLink>
             </div>
             <div class="search-input">
                 <FontAwesomeIcon :icon="['fas', 'magnifying-glass']" class="search-icon" />
                 <input type="text" placeholder="Search..." class="flex px-4 py-2">
             </div>
             <div class="profile flex items-center">
-                <!-- <NuxtLink href="/profile" class="name py-2">Username</NuxtLink>
-                <NuxtLink href="/profile" class="image "><img src="/images/user.jpg"></NuxtLink> -->
-                <NuxtLink v-if="username" :href="`/profile`" class="name py-2">{{ username }}</NuxtLink>
-        <NuxtLink v-if="username" :href="`/profile`" class="image">
-          <img src="/images/user.jpg" />
-        </NuxtLink>
-          <!-- <NuxtLink v-else :href="/login" class="login py-2">Login</NuxtLink> -->
+                <NuxtLink v-if="username" to="/profile" class="name py-2">{{ username }}</NuxtLink>
+                <NuxtLink v-if="username" to="/profile" class="image">
+                <!-- <img src="/images/user.jpg" /> -->
+                <img :src="profileImage" alt="Profile Image" class="rounded-full w-10 h-10" />
+                </NuxtLink>
             </div>
         </nav>
     </div>
-   
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
+<!-- <script setup>
+import { useAuthStore } from '~/stores/auth'
+import { onMounted, computed  } from 'vue'
 
-// عند تحميل الصفحة، استرجاع اسم المستخدم من localStorage
+const auth = useAuthStore()
 
-const username = ref('');
+const username = computed(() => auth.name || localStorage.getItem('username'))
+const profileImage = computed(() => auth.profileImage || '/images/user.png')
 
 onMounted(() => {
-  const storedUsername = localStorage.getItem('username');
-  if (storedUsername) {
-    username.value = storedUsername;
+  const storedName = localStorage.getItem('username')
+  const storedImage = localStorage.getItem('userImage')
+
+  if (storedName && !auth.name) {
+    auth.setName(storedName)
   }
-});
-</script>
+  if (storedImage && !auth.profileImage) {
+    auth.setProfileImage(storedImage)
+  }
+ 
 
-
+})
+</script>  -->
 
 <style>
 .container {
     background-color: #4E3629;
+    position:sticky;
+    top:0;
+    z-index: 999;
 }
 
 nav{
@@ -74,13 +82,13 @@ nav{
   font-weight: bold;
 }
 
-.links a:hover{
+.links a:hover {
     color: #FED8B1;
 }
 
 .search-input {
-  position: relative;  /* تحديد العنصر الأب ليكون مرجعًا للمكان النسبي */
-  width: 250px; /* يمكنك تغيير العرض حسب الحاجة */
+  position: relative; 
+  width: 250px; 
 }
 .search-input input{
     width:100%;
@@ -104,6 +112,17 @@ nav{
     font-size: 22px;
     display: flex;
     align-self: center;
+    color: #FFEAD6;
+}
+.heart-icon{
+    font-size: 22px;
+    display: flex;
+    align-self: center;
+    color: #FFEAD6;
+}
+
+.cart-icon:hover, .heart-icon:hover{
+    color: #FED8B1;
 }
 
 input:focus{
@@ -122,3 +141,40 @@ input:focus{
     margin-left: 10px;
 }
 </style>
+
+  <script setup>
+
+import { useAuthStore } from '~/stores/auth'
+import { onMounted, computed, watch } from 'vue'
+const auth = useAuthStore()
+
+// استخدام computed للوصول إلى القيم الحالية
+const username = computed(() => auth.username || localStorage.getItem('username'))
+const profileImage = computed(() => auth.profileImage || '/images/user.png')
+
+// مراقبة التغييرات في localStorage للتحديث الفوري
+watch(() => [localStorage.getItem('username'), localStorage.getItem('userImage')], 
+  ([newName, newImage]) => {
+    if (newName && newName !== auth.username) {
+      auth.setName(newName)
+    }
+    if (newImage && newImage !== auth.profileImage) {
+      auth.setProfileImage(newImage)
+    }
+  }
+)
+
+onMounted(() => {
+  // تحميل القيم الأولية من localStorage
+  const storedName = localStorage.getItem('username')
+  const storedImage = localStorage.getItem('userImage')
+
+  if (storedName && !auth.username) {
+    auth.setName(storedName)
+  }
+  if (storedImage && !auth.profileImage) {
+    auth.setProfileImage(storedImage)
+  }
+})
+</script>
+ 

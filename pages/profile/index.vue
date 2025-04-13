@@ -1,132 +1,421 @@
-<template>
-  <div class="orders-page">
+<!-- <template>
+  <div class="info-page">
     <Sidebar />
     <div class="content">
-      <h1>Orders</h1>
-
-      <div v-if="loading">Loading...</div>
-
-      <div v-else-if="orders.length === 0" class="empty-orders">
-        <p>No order has been made yet</p>
-        <button class="browse-button" @click="browseBooks">Browse Books</button>
-      </div>
-
-      <div v-else class="order-list">
-        <div v-for="order in orders" :key="order._id" class="order-item">
-          <p>Order #{{ order._id.slice(-5).toUpperCase() }} - Total: ${{ order.total }}</p>
-          <p>Status: {{ order.status }}</p>
-          <ul>
-            <li v-for="item in order.books" :key="item.bookId">
-              {{ item.title }} - {{ item.quantity }}x
-            </li>
-          </ul>
-          <p class="text-gray-400 text-sm">Created At: {{ formatDate(order.createdAt) }}</p>
+      <div class="header">
+        <div class="profile-image-section">
+          <label for="imageUpload">
+            <img :src="imagePreview || '/images/user.jpg'" class="profile-image" />
+            <span class="edit-icon"><FontAwesomeIcon icon="fa-solid fa-pen" />
+            </span>
+          </label>
+          <input type="file" id="imageUpload" accept="image/*" @change="handleImageChange" hidden />
         </div>
+        <h2>{{ form.name }} {{ form.fullName }}</h2>
       </div>
+
+      <form @submit.prevent="updateProfile" class="profile-form">
+        <div class="grid">
+          <div>
+            <label>First Name</label>
+            <input v-model="form.name" type="text" />
+          </div>
+          <div>
+            <label>Last Name</label>
+            <input v-model="form.fullName" type="text" />
+          </div>
+          <div>
+            <label>Email</label>
+            <input v-model="form.email" type="email" disabled />
+          </div>
+          <div>
+            <label>Phone Number</label>
+            <input v-model="form.mobile" type="text" />
+          </div>
+          <div>
+            <label>Location</label>
+            <input v-model="form.location" type="text" />
+          </div>
+          <div>
+            <label>Postal Code</label>
+            <input v-model="form.postalCode" type="text" />
+          </div>
+        </div>
+
+        <div class="btn-wrapper">
+          <button type="submit">Save Changes</button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { navigateTo } from '#app'
 import Sidebar from '~/components/Sidebar.vue'
+import { useAuthStore } from '@/stores/auth'
 
-definePageMeta({
-  layout: 'registered',
+definePageMeta({ layout: 'registered' })
+
+const auth = useAuthStore()
+
+const form = ref({
+  name: '',
+  fullName: '',
+  email: '',
+  mobile: '',
+  location: '',
+  postalCode: '',
 })
 
-const orders = ref([])
-const loading = ref(true)
-
-const fetchOrders = async () => {
-  try {
-    const res = await fetch('http://localhost:5000/orders/my-orders', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    })
-
-    const data = await res.json()
-
-    if (res.ok) {
-      orders.value = data
-    } else {
-      console.error('Error fetching orders:', data.message || 'Unknown error')
-    }
-  } catch (error) {
-    console.error('Error fetching orders:', error)
-  } finally {
-    loading.value = false
-  }
-}
+const imagePreview = ref('')
 
 onMounted(() => {
-  fetchOrders()
+  form.value.name = auth.name || localStorage.getItem('username') || '';
+  form.value.fullName = auth.fullName || localStorage.getItem('fullName') || '';
+  form.value.mobile = auth.mobile || localStorage.getItem('mobile') || '';
+  form.value.location = auth.location || localStorage.getItem('location') || '';
+  form.value.postalCode = auth.postalCode || localStorage.getItem('postalCode') || '';
+  form.value.email = auth.email;
+  imagePreview.value = auth.profileImage || localStorage.getItem('userImage') || '/images/user.jpg'
 })
 
-const browseBooks = () => {
-  navigateTo('/books')
+const handleImageChange = async (e) => {
+  const file = e.target.files[0]
+  if (!file) return
+
+  const reader = new FileReader()
+  reader.onload = () => {
+    imagePreview.value = reader.result
+    auth.setProfileImage(reader.result)
+  }
+  reader.readAsDataURL(file)
 }
 
-const formatDate = (date) => {
-  return new Date(date).toLocaleDateString()
+console.log('Token:', localStorage.getItem('token'));
+const updateProfile = async () => {
+  try {
+    const res = await fetch('http://localhost:5000/auth/updateProfile', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({
+        name: form.value.name,
+        fullName: form.value.fullName,
+        email: form.value.email,
+        mobile: form.value.mobile,
+        location: form.value.location,
+        postalCode: form.value.postalCode,
+        profileImage: imagePreview.value,
+      }),
+    });
+    console.log('Sending token:', localStorage.getItem('token'));
+
+
+    const data = await res.json();
+
+    if (res.ok) {
+      auth.setName(form.value.name)
+      auth.setProfileImage(imagePreview.value)
+
+      // Update localStorage
+      localStorage.setItem('username', form.value.name);
+      localStorage.setItem('mobile', form.value.mobile);
+      localStorage.setItem('userImage', imagePreview.value);
+      localStorage.setItem('fullName', form.value.fullName);
+      localStorage.setItem('location', form.value.location);
+      localStorage.setItem('postalCode', form.value.postalCode);
+
+      alert('Profile updated successfully!');
+    } else {
+      alert(data.message || 'Failed to update profile');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Something went wrong');
+  }
+};
+</script> -->
+
+<template>
+  <div class="info-page">
+    <Sidebar />
+    <div class="content">
+      <div class="header">
+        <div class="profile-image-section">
+          <label for="imageUpload">
+            <img :src="imagePreview || '/images/user.jpg'" class="profile-image" />
+            <span ><FontAwesomeIcon class="edit-icon" icon="fa-solid fa-pen" />
+            </span>
+          </label>
+          <input type="file" id="imageUpload" accept="image/*" @change="handleImageChange" hidden />
+        </div>
+        <h2>{{ form.name }} {{ form.fullName }}</h2>
+      </div>
+
+      <div v-if="message.text" :class="['message', message.type]">
+        {{ message.text }}
+      </div>
+
+      <form @submit.prevent="updateProfile" class="profile-form">
+        <div class="grid">
+          <div>
+            <label>First Name</label>
+            <input v-model="form.name" type="text" />
+          </div>
+          <div>
+            <label>Last Name</label>
+            <input v-model="form.fullName" type="text" />
+          </div>
+          <div>
+            <label>Email</label>
+            <input v-model="form.email" type="email" disabled />
+          </div>
+          <div>
+            <label>Phone Number</label>
+            <input v-model="form.mobile" type="text" />
+          </div>
+          <div>
+            <label>Location</label>
+            <input v-model="form.location" type="text" />
+          </div>
+          <div>
+            <label>Postal Code</label>
+            <input v-model="form.postalCode" type="text" />
+          </div>
+        </div>
+
+        <div class="btn-wrapper">
+          <button type="submit">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import Sidebar from '~/components/Sidebar.vue'
+import { useAuthStore } from '@/stores/auth'
+
+definePageMeta({ layout: 'registered' })
+
+const auth = useAuthStore()
+
+const form = ref({
+  name: '',
+  fullName: '',
+  email: '',
+  mobile: '',
+  location: '',
+  postalCode: '',
+})
+
+const imagePreview = ref('')
+const message = ref({
+  text: '',
+  type: '' // 'success' أو 'error'
+})
+
+onMounted(() => {
+  form.value.name = auth.name || localStorage.getItem('username') || '';
+  form.value.fullName = auth.fullName || localStorage.getItem('fullName') || '';
+  form.value.mobile = auth.mobile || localStorage.getItem('mobile') || '';
+  form.value.location = auth.location || localStorage.getItem('location') || '';
+  form.value.postalCode = auth.postalCode || localStorage.getItem('postalCode') || '';
+  form.value.email = auth.email;
+  imagePreview.value = auth.profileImage || localStorage.getItem('userImage') || '/images/user.jpg'
+})
+
+const handleImageChange = async (e) => {
+  const file = e.target.files[0]
+  if (!file) return
+
+  const reader = new FileReader()
+  reader.onload = () => {
+    imagePreview.value = reader.result
+    auth.setProfileImage(reader.result)
+  }
+  reader.readAsDataURL(file)
 }
+
+const showMessage = (text, type = 'success') => {
+  message.value = { text, type }
+  setTimeout(() => {
+    message.value.text = ''
+  }, 5000)
+}
+
+const updateProfile = async () => {
+  try {
+    const res = await fetch('http://localhost:5000/auth/updateProfile', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({
+        name: form.value.name,
+        fullName: form.value.fullName,
+        email: form.value.email,
+        mobile: form.value.mobile,
+        location: form.value.location,
+        postalCode: form.value.postalCode,
+        profileImage: imagePreview.value,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      auth.setName(form.value.name)
+      auth.setProfileImage(imagePreview.value)
+
+      // Update localStorage
+      localStorage.setItem('username', form.value.name);
+      localStorage.setItem('mobile', form.value.mobile);
+      localStorage.setItem('userImage', imagePreview.value);
+      localStorage.setItem('fullName', form.value.fullName);
+      localStorage.setItem('location', form.value.location);
+      localStorage.setItem('postalCode', form.value.postalCode);
+
+      showMessage('your data is updated successfully', 'success')
+    } else {
+      showMessage(data.message || 'update failed', 'error')
+    }
+  } catch (err) {
+    console.error(err);
+    showMessage('try again', 'error')
+  }
+};
 </script>
 
 
+
 <style scoped>
-.orders-page {
+  .message {
+    padding: 8px 0px;
+    margin:10px auto;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-align: center;
+    width:40%;
+  }
+  
+  .message.success {
+    background-color: #e6ffed;
+    color: #2d8a4b;
+    border: 1px solid #a7f3c8;
+  }
+  
+  .message.error {
+    background-color: #fff5f5;
+    color: #e53e3e;
+    border: 1px solid #fed7d7;
+  }
+.info-page {
   padding: 50px;
   background: #fdf6ee;
   height: 100%;
   display: flex;
 }
-
 h1 {
   margin: 10px 320px;
   color: #4e3629;
   font-size: 24px;
   font-weight: bold;
 }
-
-.empty-orders {
-  background: #fdecd2;
-  padding: 10px 25px;
-  border-radius: 30px;
-  font-size: 18px;
-  color: #5a3d2b;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0px auto;
+.content {
+  flex: 1;
+  padding: 0px;
 }
 
-.browse-button {
-  background: #6a4b3a;
-  color: white;
-  padding: 10px 70px;
-  border: none;
-  border-radius: 20px;
-  font-size: 16px;
+.header {
+  text-align: center;
+  margin-bottom: 0px;
+  position: relative;
+}
+
+.profile-image-section {
+  display: inline-block;
+  position: relative;
+}
+
+.edit-icon {
+  position: absolute;
+  bottom: 0;
+  right: 5px;
+  background-color: #4e3629;
+  color:  #FFEAD6;
+  border-radius:50%;
+  font-size: 10px;
+  padding: 7px;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-.browse-button:hover {
-  background: #5a3d2b;
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid #5a3d2b;
+  object-fit: cover;
+  cursor: pointer;
 }
 
-.order-list {
-  margin-top: 20px;
+h2 {
+  margin-top: 10px;
+  font-size: 22px;
+  color: #4e3629;
+  font-weight: 600;
 }
 
-.order-item {
-  background: #fff;
-  padding: 15px;
-  margin-bottom: 10px;
-  border-radius: 5px;
+.profile-form {
+  max-width: 800px;
+  margin: auto;
 }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 40px;
+  margin-bottom: 30px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #b29583;
+  border-radius: 40px;
+  margin-top: 5px;
+  background: none;
+}
+
+label {
+  color: #4e3629;
+  font-weight: 500;
+}
+
+.btn-wrapper {
+  text-align: center;
+}
+
+button {
+  background: #3e2723;
+  color: #fad4a2;
+  padding: 12px 40px;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #fad4a2;
+  color: #4e3629;
+}
+
 </style>

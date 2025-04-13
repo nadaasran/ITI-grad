@@ -1,46 +1,62 @@
 <template>
-    <section class="trending">
-      <h2>Trending Shelf</h2>
-      <div class="book-list">
-        <div v-for="book in books" :key="book.id" class="book-card">
-          <img :src="book.image" :alt="book.title" />
-          <h3>{{ book.title }}</h3>
-          <p>{{ book.discount }}% Off</p>
+  <section class="py-12 px-4 sm:px-6 lg:px-8 bg-[#FFF7EF] ">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-yellow-950  mb-4">Trending shelf</h2>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <!-- Product 1 -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 mb-9 hover:drop-shadow-xl transform hover:scale-105">
+          <div class="p-2">
+            <img src="/images/book1.png" alt="">
+            <!-- <span class="inline-block bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-semibold">15% Off</span> -->
+            <h3 class="text-lg font-bold text-[#6F4E37] mt-2">MDS DRAWING BOOK</h3>
+            <div class="flex items-center mt-1">
+              <span class="text-yellow-400">★★★★★</span>
+            </div>
+          </div>
         </div>
+
+        <!-- Product 2 -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 mb-9 hover:drop-shadow-xl transform hover:scale-105">
+          <div class="p-2">
+            <img src="/images/book2.png" alt="">
+            <!-- <span class="inline-block bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-semibold">15% Off</span> -->
+            <h3 class="text-lg font-bold text-[#6F4E37] mt-2">MDS DRAWING BOOK</h3>
+            <div class="flex items-center mt-1">
+              <span class="text-yellow-400">★★★★★</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 mb-9 hover:drop-shadow-xl transform hover:scale-105">
+          <div class="p-2 relative">
+            <img src="/images/book3.png" alt="" class="w-full h-auto ">
+            <span class="inline-block bg-yellow-950 text-white px-2 py-1 rounded-full text-xs font-semibold absolute top-2 right-2">15% Off</span>
+            <h3 class="text-lg font-bold text-[#6F4E37] mt-2">MDS DRAWING BOOK</h3>
+            <div class="flex items-center mt-1">
+              <span class="text-yellow-400">★★★★★</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 4 -->  
+        <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 mb-9 hover:drop-shadow-xl transform hover:scale-105">
+          <div class="p-2">
+            <img src="/images/book4.png" alt="">
+            <!-- <span class="inline-block bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-semibold">15% Off</span> -->
+            <h3 class="text-lg font-bold text-[#6F4E37] mt-2">MDS DRAWING BOOK</h3>
+            <div class="flex items-center mt-1">
+              <span class="text-yellow-400">★★★★★</span>
+            </div>
+          </div>
+        </div>
+        
       </div>
-    </section>
-  </template>
-  
-  <script setup>
-  const books = [
-    { id: 1, title: "Kids Drawing Book", image: "/book1.jpg", discount: 15 },
-    { id: 2, title: "Mariana", image: "/book2.jpg", discount: 15 },
-    { id: 3, title: "Love Brings You Home", image: "/book3.jpg", discount: 15 },
-    { id: 4, title: "Roman", image: "/book4.jpg", discount: 15 }
-  ];
-  </script>
-  
-  <style scoped>
-  .trending {
-    text-align: center;
-    padding: 40px 20px;
-  }
-  .book-list {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-  }
-  .book-card {
-    background: #fff;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 150px;
-  }
-  .book-card img {
-    width: 100%;
-    border-radius: 8px;
-  }
-  </style>
-  
+    </div>
+  </section>
+</template>
+
+<script setup>
+// No script needed for this component
+</script>

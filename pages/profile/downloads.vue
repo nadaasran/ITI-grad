@@ -1,24 +1,26 @@
 <template>
-  <div class="downloads-page">
+  <div class="orders-page">
     <Sidebar />
     <div class="content">
       <h1>Downloads</h1>
 
       <div v-if="loading">Loading...</div>
 
-      <div v-else-if="downloads.length === 0" class="empty">
-        <p>No downloads available</p>
+      <div v-else-if="orders.length === 0" class="empty-orders">
+        <p>No order has been made yet</p>
+        <button class="browse-button" @click="browseBooks">Browse Books</button>
       </div>
 
-      <div v-else class="download-list">
-        <div v-for="order in downloads" :key="order._id" class="download-item">
+      <div v-else class="order-list">
+        <div v-for="order in orders" :key="order._id" class="order-item">
+          <p>Order #{{ order._id.slice(-5).toUpperCase() }} - Total: ${{ order.total }}</p>
+          <p>Status: {{ order.status }}</p>
           <ul>
             <li v-for="item in order.books" :key="item.bookId">
               {{ item.title }} - {{ item.quantity }}x
-              <a :href="getDownloadLink(item.bookId)" class="download-link" download>Download</a>
             </li>
           </ul>
-          <p class="text-gray-400 text-sm">Purchased At: {{ formatDate(order.createdAt) }}</p>
+          <p class="text-gray-400 text-sm">Created At: {{ formatDate(order.createdAt) }}</p>
         </div>
       </div>
     </div>
@@ -28,30 +30,35 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { navigateTo } from '#app'
 import Sidebar from '~/components/Sidebar.vue'
 
 definePageMeta({
   layout: 'registered',
 })
 
-const downloads = ref([])
+const orders = ref([])
 const loading = ref(true)
 
-const fetchDownloads = async () => {
+const fetchOrders = async () => {
   try {
-    const res = await fetch('http://localhost:5000/orders/downloads', {
+    const res = await fetch('http://localhost:5000/orders/my-orders', {
+      method: 'GET',
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     })
+
     const data = await res.json()
+
     if (res.ok) {
-      downloads.value = data
+      orders.value = data
     } else {
-      console.error('Error fetching downloads:', data.message)
+      console.error('Error fetching orders:', data.message || 'Unknown error')
     }
-  } catch (err) {
-    console.error('Error:', err)
+  } catch (error) {
+    console.error('Error fetching orders:', error)
   } finally {
     loading.value = false
   }
@@ -59,19 +66,21 @@ const fetchDownloads = async () => {
 }
 
 onMounted(() => {
-  fetchDownloads()
+  fetchOrders()
 })
 
-const formatDate = (date) => new Date(date).toLocaleDateString()
-
-const getDownloadLink = (bookId) => {
-  return `http://localhost:5000/api/books/download/${bookId}`
+const browseBooks = () => {
+  navigateTo('/books')
 }
+
+const formatDate = (date) => {
+  return new Date(date).toLocaleDateString()
+}
+
 </script>
 
-
 <style scoped>
-.downloads-page {
+.orders-page {
   padding: 50px;
   background: #fdf6ee;
   height: 100%;
@@ -80,12 +89,12 @@ const getDownloadLink = (bookId) => {
 
 h1 {
   margin: 10px 320px;
-  color: #4E3629;
+  color: #4e3629;
   font-size: 24px;
   font-weight: bold;
 }
 
-.empty-downloads {
+.empty-orders {
   background: #fdecd2;
   padding: 10px 25px;
   border-radius: 30px;
@@ -112,32 +121,14 @@ h1 {
   background: #5a3d2b;
 }
 
-.download-list {
+.order-list {
   margin-top: 20px;
 }
 
-.download-item {
+.order-item {
   background: #fff;
   padding: 15px;
   margin-bottom: 10px;
   border-radius: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.download-button {
-  background: #6a4b3a;
-  color: white;
-  padding: 8px 20px;
-  border: none;
-  border-radius: 20px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.download-button:hover {
-  background: #5a3d2b;
 }
 </style>
