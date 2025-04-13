@@ -12,15 +12,15 @@
       </div>
 
   
-      <p class="font-light text-[#4E3629]">Novel</p>
-      <div class="flex gap-5">
+      <p class="font-light text-[#4E3629] text-center">Novel</p>
+      <div class="mx-3 flex gap-5">
         <p class="mx-1">${{ book.price }}</p>
         <p class="font-light">Addie Renee</p>
       </div>
       <p class="text-yellow-400 mx-9 text-center">
         &star; &star; &star; &star; &star;
       </p>
-      <button class="bg-[#4E3629] flex justify-center mx-9 w-40 rounded-full text-white" >View Book</button>
+      <NuxtLink href="/bookDetails" class="button bg-[#4E3629] flex justify-center w-40 rounded-full text-white" >View Book</NuxtLink>
     </div>
   </template>
   
@@ -56,14 +56,14 @@ const toggleLike = () => {
 .heart-icon.liked {
   color: #4E3629;
 }
-button{
+.button{
     cursor: pointer;
     padding: 8px  0 ;
     border-radius: 40px;
-    width: 120px;
+    width: 180px;
     color: #FED8B1;
 }
-button:hover{
+.button:hover{
     background-color: #FED8B1;
     color: #4E3629;
 }

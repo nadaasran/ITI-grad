@@ -79,4 +79,5 @@
 
 
 <script setup>
+    definePageMeta({ layout: 'registered' })
 </script>

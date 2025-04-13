@@ -70,5 +70,6 @@ h1{
 .icon{
   /* width: 30px; */
   font-size: 30px;
+  color: #f6ddc6;
 }
 </style>

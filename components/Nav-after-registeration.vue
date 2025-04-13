@@ -7,8 +7,8 @@
             <div class="links flex items-center">
                 <NuxtLink href="/" class="px-3 py-5" active-class="active">Home</NuxtLink>
                 <NuxtLink href="/books" class="px-5 py-2" active-class="active">Books</NuxtLink>
-                <NuxtLink href="/plans" class="px-5 py-2" active-class="active">Plans</NuxtLink>
-                <NuxtLink href="/contact" class="px-5 py-2" active-class="active">Contact Us</NuxtLink>
+                <NuxtLink href="/#plans" class="px-5 py-2">Plans</NuxtLink>
+                <NuxtLink href="/#contact" class="px-5 py-2" >Contact Us</NuxtLink>
                 <NuxtLink href="/cart" class="px-5 py-2" active-class="active"><FontAwesomeIcon :icon="['fas', 'cart-shopping']" class="cart-icon"/></NuxtLink>
                 <NuxtLink href="/favourites" class="px-5 py-2" active-class="active"><FontAwesomeIcon :icon="['fas', 'heart']"  class="heart-icon"/></NuxtLink>
             </div>
@@ -54,6 +54,9 @@ onMounted(() => {
 <style>
 .container {
     background-color: #4E3629;
+    position:sticky;
+    top:0;
+    z-index: 999;
 }
 
 nav{

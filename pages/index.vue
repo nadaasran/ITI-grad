@@ -1,7 +1,7 @@
 <template>
    <div class="bg-[#FFF7EF] flex flex-col gap-8">
      <!-- hero section -->
-     <section class="py-12 px-4 sm:px-6 lg:px-8 ">
+     <section class="py-12 px-4 sm:px-6 lg:px-8  ">
        <div class="relative w-full h-[400px]">
          <img src="/images/Frame 608 (2).png" alt="" class="w-full h-full object-cover">
          <div class="absolute inset-0 bg-gradient-to-r from-[#4E3629] via-[#4E3629] to-[#FED8B1] opacity-70"></div>
@@ -21,7 +21,7 @@
      </div>
  
      <!-- plans section - -->
-     <section class="px-4 sm:px-6 lg:px-8 bg-[#FFF7EF] py-12  flex items-center justify-center">
+     <section id="plans" class="px-4 sm:px-6 lg:px-8 bg-[#FFF7EF] py-12  flex items-center justify-center">
        <div class="max-w-6xl mx-auto">
          <h2 class="text-3xl font-bold text-yellow-950 mb-8">Choose your Plan</h2>
          
@@ -33,7 +33,9 @@
        </div>
      </section>
      <!-- contact us -->
-     <contact />
+      <div id="contact">
+        <contact />
+      </div>
     
    </div>
  </template>

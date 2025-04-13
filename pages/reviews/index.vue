@@ -55,6 +55,8 @@
   <script setup>
   import { ref, computed, onMounted } from 'vue'
   import { useRoute } from '#app'
+  definePageMeta({ layout: 'registered' })
+
   
   // 🟡 الكتاب من URL
   const route = useRoute()

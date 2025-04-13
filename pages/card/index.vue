@@ -50,3 +50,7 @@
         </div>
     </div>
     </template>
+
+    <script setup>
+    definePageMeta({ layout: 'registered' })
+    </script>

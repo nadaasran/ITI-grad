@@ -113,6 +113,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import cartCard from '~/components/cartCard.vue';
+definePageMeta({ layout: 'registered' })
+
 
 const cartItems = ref([]);
 const shipping = 10; // قيمة ثابتة
