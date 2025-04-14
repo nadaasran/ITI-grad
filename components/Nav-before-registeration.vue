@@ -21,6 +21,10 @@
 <style>
 .container {
     background-color: #4E3629;
+    width: 100vw;
+    position: sticky;
+    top: 0;
+    z-index: 999;
 }
 
 nav{
