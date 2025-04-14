@@ -25,11 +25,10 @@
     position: sticky;
     top: 0;
     z-index: 999;
-    width: 100%;
 }
 
 nav{
-    width: 90%;
+    width: 100vh;
     height: 70px;
     margin: auto;
 
