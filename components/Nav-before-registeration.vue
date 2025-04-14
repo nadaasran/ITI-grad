@@ -1,5 +1,5 @@
 <template>
-    <div class="container mx-auto">
+    <div class="container w-full">
         <nav class="flex justify-between items-center py-4">
             <div>
                 <a href="/" class="logo text-2xl font-bold">Qera'a</a>
@@ -25,6 +25,7 @@
     position: sticky;
     top: 0;
     z-index: 999;
+    width: 100%;
 }
 
 nav{
