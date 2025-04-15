@@ -46,6 +46,10 @@
  import author from '~/components/author.vue'
  import SubscriptionCard from '~/components/Subscription Card.vue'
  import contact from '~/components/Contact.vue'
+//  import { useAuth } from '~/stores/useAuth'
+
+// const auth = useAuth()
+// auth.initializeToken()
  </script>
  
  <style scoped>

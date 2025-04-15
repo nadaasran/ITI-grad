@@ -150,7 +150,7 @@ const auth = useAuthStore()
 
 // استخدام computed للوصول إلى القيم الحالية
 const username = computed(() => auth.username || localStorage.getItem('username'))
-const profileImage = computed(() => auth.profileImage || '/images/user.png')
+const profileImage = computed(() => auth.profileImage || '/images/user.png') //.
 
 // مراقبة التغييرات في localStorage للتحديث الفوري
 watch(() => [localStorage.getItem('username'), localStorage.getItem('userImage')], 
