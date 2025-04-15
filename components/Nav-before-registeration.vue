@@ -21,14 +21,14 @@
 <style>
 .container {
     background-color: #4E3629;
-    width: 100vw;
+    /* width: 100vw; */
     position: sticky;
     top: 0;
     z-index: 999;
 }
 
 nav{
-    width: 100vh;
+    width: 90%;
     height: 70px;
     margin: auto;
 
