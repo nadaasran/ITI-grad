@@ -114,8 +114,8 @@
 
 </template>
 
-<script setup>
+<!-- <script setup>
 definePageMeta({
   layout: 'registered', 
 }); 
-</script>
+</script> -->
