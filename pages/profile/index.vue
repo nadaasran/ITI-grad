@@ -146,7 +146,7 @@ const updateProfile = async () => {
       <div class="header">
         <div class="profile-image-section">
           <label for="imageUpload">
-            <img :src="imagePreview || '/images/user.jpg'" class="profile-image" />
+            <img :src="'/images/user.jpg' || imagePreview " class="profile-image" />
             <span ><FontAwesomeIcon class="edit-icon" icon="fa-solid fa-pen" />
             </span>
           </label>
