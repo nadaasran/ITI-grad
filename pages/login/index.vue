@@ -180,11 +180,13 @@ const loginWithGoogle = async () => {
 </template>
 
 <script setup>
+definePageMeta({
+  layout: 'default',
+})
 import { useAuthStore } from '~/stores/auth'
-import { useAuthToken } from '~/stores/useAuthToken'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
-const token = useCookie('token')///
+
 const auth = useAuthStore()
 const router = useRouter()
 
@@ -220,26 +222,33 @@ const handleSubmit = async () => {
 
     const data = await res.json()
     console.log(data)
-    console.log(res)
+    // console.log(res)
     if (!res.ok) {
       console.log(data.message);
-      
       auth.setError(data.message || 'Invalid email or password')
       return
     }
-
-    // auth.setToken(data.token)
-    // localStorage.setItem('token', data.token) //
-    //  // ✅ Get instance of the Pinia store
+     //
     //  const authTokenStore = useAuthToken()
-    
-    // // ✅ Store the token in Pinia
     // authTokenStore.setToken(data.token)
     // console.log(data.token)
     // auth.setError('')
-    // router.push('/')
-    token.value = data.token
-    router.push('/dashboard')
+    const user = data.user
+    const token = data.token
+
+    // Save token & user data to cookies
+    useCookie('token').value = token
+    useCookie('username').value = user.username
+    useCookie('userImage').value = user.image || '/images/user.png'
+    useCookie('role').value = user.isAdmin ? 'admin' : 'user'
+
+    // Optionally save to Pinia store too
+    auth.setToken(token)
+    auth.setName(user.username)
+
+    // Redirect based on role
+    navigateTo(user.isAdmin ? '/admin/' : '/')
+
   } catch (error) {
     console.log(error);
     auth.setError('An unexpected error occurred. Please try again!')

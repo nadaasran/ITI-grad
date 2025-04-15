@@ -248,6 +248,9 @@ const loginWithGoogle = async () => {
   </template>
   
   <script setup>
+  definePageMeta({
+  layout: 'default',
+})
   import { useAuthStore } from '@/stores/auth'
   import { useRouter } from 'vue-router'
   import { ref } from 'vue'

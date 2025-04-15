@@ -99,8 +99,8 @@
   </template>
   
   <script setup>
-  definePageMeta({
-    layout: 'admin',
+ definePageMeta({
+  middleware: ['admin']
   })
   import { ref } from 'vue'
 

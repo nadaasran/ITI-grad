@@ -10,10 +10,6 @@
          </h1>
        </div>
      </section>
-     <NuxtLink to="/admin/products">
-   Admin product pages
-</NuxtLink>
-
  
      <!-- trend books section -->
      <trend />

@@ -200,7 +200,7 @@ import { ref, onMounted } from 'vue'
 import Sidebar from '~/components/Sidebar.vue'
 import { useAuthStore } from '@/stores/auth'
 
-definePageMeta({ layout: 'registered' })
+
 
 const auth = useAuthStore()
 
