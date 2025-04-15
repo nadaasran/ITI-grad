@@ -224,6 +224,22 @@ const loginWithGoogle = async () => {
     />
   </div>
   <span v-if="passwordError" class="error-message">{{ passwordError }}</span>
+  <div class="password-wrapper">
+  <label>Confirm Password*</label>
+  <div class="password-input-container">
+    <input
+      :type="showPassword ? 'text' : 'password'"
+      v-model="confirmPassword"
+      placeholder="Confirm your password"
+    />
+    <FontAwesomeIcon
+      :icon="showPassword ? ['fas', 'eye-slash'] : ['fas', 'eye']"
+      class="eye-icon"
+      @click="togglePasswordVisibility"
+    />
+  </div>
+  <span v-if="confirmPasswordError" class="error-message">{{ confirmPasswordError }}</span>
+</div>
 </div>
             <div class="terms">
               <input type="checkbox" v-model="auth.agree" /> 
@@ -262,6 +278,9 @@ const togglePasswordVisibility = () => {
   const nameError = ref('')
   const emailError = ref('')
   const passwordError = ref('')
+  const confirmPassword = ref('')
+const confirmPasswordError = ref('')
+
   
   const validateName = () => {
     if (!auth.name) {
@@ -306,19 +325,29 @@ const togglePasswordVisibility = () => {
       passwordError.value = ''
     }
   }
+  const validateConfirmPassword = () => {
+  if (!confirmPassword.value) {
+    confirmPasswordError.value = 'Please confirm your password'
+  } else if (confirmPassword.value !== auth.password) {
+    confirmPasswordError.value = 'Passwords do not match'
+  } else {
+    confirmPasswordError.value = ''
+  }
+}
+
   
-  const handleSubmit = async () => {
-    validateName()
-    validatePassword()
-    validateField('email')
- 
-    if (nameError.value || passwordError.value || emailError.value) return
-  
-    if (!auth.agree) {
-      auth.setError("You must agree to the terms!")
-      return
-    }
-  
+const handleSubmit = async () => {
+  validateName()
+  validatePassword()
+  validateField('email')
+  validateConfirmPassword()
+
+  if (nameError.value || passwordError.value || emailError.value || confirmPasswordError.value) return
+
+  if (!auth.agree) {
+    auth.setError("You must agree to the terms!")
+    return
+  }
     try {
       const res = await fetch("http://localhost:5000/auth/register", {
         method: "POST",
