@@ -10,6 +10,10 @@
          </h1>
        </div>
      </section>
+     <NuxtLink to="/admin/products">
+   Admin product pages
+</NuxtLink>
+
  
      <!-- trend books section -->
      <trend />
@@ -36,7 +40,7 @@
       <div id="contact">
         <contact />
       </div>
-    
+    <Footer />
    </div>
  </template>
  
@@ -46,10 +50,7 @@
  import author from '~/components/author.vue'
  import SubscriptionCard from '~/components/Subscription Card.vue'
  import contact from '~/components/Contact.vue'
-//  import { useAuth } from '~/stores/useAuth'
-
-// const auth = useAuth()
-// auth.initializeToken()
+ import footer from '~/components/Footer.vue'
  </script>
  
  <style scoped>
