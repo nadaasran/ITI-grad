@@ -8,7 +8,7 @@
       <ul class="space-y-3 text-sm">
         <li>
           <NuxtLink 
-            to="/admin/index"
+            to="/admin/"
              active-class="activeA"
             class="text-[#4E3629] font-medium tracking-wide py-1 px-2 rounded transition-colors duration-200 hover:bg-[#4E3629] hover:text-white"
           >

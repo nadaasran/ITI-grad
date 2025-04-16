@@ -8,12 +8,14 @@
         <p class="text-sm text-[#FFF7EF]">Home > All Products</p>
       </div>
 
-      <NuxtLink
-        to="/admin/newproduct"
-        class="px-4 py-2 bg-[#FFF7EF] rounded-md text-[#4E3629] font-semibold"
-      >
-        Add New Product
-      </NuxtLink>
+      <!-- class="px-4 py-2 bg-[#FFF7EF] rounded-md text-[#4E3629] font-semibold" -->
+      <button class="add-btn bg-[#A67B5B] px-5 py-3 rounded-md text-white font-semibold cursor">
+        <NuxtLink
+          to="/admin/add-book"
+        >
+          + Add new book
+        </NuxtLink>
+        </button>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -24,9 +26,9 @@
 
   
   <script setup>
-definePageMeta({
-  layout: 'admin',
-})
+ definePageMeta({
+  middleware: ['admin']
+  })
 
   import ProductCard from '@/components/ProductCard.vue'
   import  AdminHeader  from '@/components/AdminHeader.vue'
