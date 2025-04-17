@@ -16,7 +16,17 @@
     >
       <div class="flex items-center space-x-2">
         <!-- Placeholder box for book image/icon -->
-        <div class="w-8 h-8 bg-gray-300 rounded"></div>
+        <!-- <div class="w-8 h-8 bg-gray-300 rounded"></div> -->
+        <div class="w-10 h-10 rounded overflow-hidden bg-gray-300 flex items-center justify-center">
+        <img
+          v-if="book.image"
+          :src="book.image"
+          alt="Book cover"
+          class="w-full h-full object-cover"
+          @error="book.image = ''"
+        />
+      </div>
+
         <span class="font-medium">{{ book.title }}</span>
       </div>
       <div class="text-right">
