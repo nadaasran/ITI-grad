@@ -59,12 +59,12 @@
        </div>
      </div>
      
-     <NuxtLink
+     <!-- <NuxtLink
        :to="`/books2/${book._id}/reviews`"
        class="text-center text-[#16100B] text-2xl font-normal font-['Playfair_Display'] decoration-solid underline"
      >
        See All
-     </NuxtLink>
+     </NuxtLink> -->
    </div>
  
    <div v-for="review in reviews" :key="review._id" class="review-card">

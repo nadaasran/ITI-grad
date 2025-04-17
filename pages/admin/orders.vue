@@ -1,125 +1,51 @@
-<!-- <template>
-    <AdminHeader/>
-    <div class="bg-[#4E3629] h-180vh px-6 py-24 relative">
-        <div class="flex flex-col items-start justify-start mb-6 text-[#FFEAD6] absolute top-5 text-xl">
-            <p class="font-bold">Orders list</p>
-            <p>Home > order list</p>
-
-        </div>
-        <div class="bg-[#FFF7EF] rounded-xl p-7">
-        <div class="flex items-center  justify-between mb-15 font-bold text-2xl">
-            <p>Recent Purchases</p>
-            <i class="fa-solid fa-ellipsis-vertical"></i>
-        </div>
-        <div>
-        <div class="flex items-center justify-between w-full font-semibold text-lg">
-            <div class="flex items-center gap-2 text-center">
-                <input type="checkbox"> Product </input>
-
-            </div>
-            <p >Order ID</p>
-            <p >Date</p>
-            <p>Customer Name</p>
-            <p>status</p>
-            <p>amount</p>
-        </div>
-    </div>
-    <hr class="  border-t-2 border-gray-300  text-center mt-5 mb-10 flex items-center justify-center px-20">
-            <orderList/>
-            <orderList/>
-            <orderList/>
-            <orderList/>
-            <orderList/>
-        </div>
-
-
-    <div class="flex items-end justify-center space-x-1 mt-6 bg-[#4E3629] text-[#FED8B1] border-[#FED8B1]"> -->
-        <!-- Previous Button -->
-        <!-- <button class="px-3 py-1 rounded-md  disabled:opacity-50 border-1 hover:text-[#4E3629] hover:bg-[#FED8B1]" disabled>
-            Prev
-        </button> -->
-
-        <!-- Page Numbers -->
-        <!-- <button class="px-3 py-1 rounded-md  font-semibold border-1 hover:text-[#4E3629] hover:bg-[#FED8B1] ">1</button>
-        <button class="px-3 py-1 rounded-md  border-1 hover:text-[#4E3629] hover:bg-[#FED8B1]">2</button>
-        <button class="px-3 py-1 rounded-md   border-1 hover:text-[#4E3629] hover:bg-[#FED8B1] ">3</button>
-        <span class="px-2 py-1">...</span>
-        <button class="px-3 py-1 rounded-md   border-1 hover:text-[#4E3629] hover:bg-[#FED8B1] ">10</button> -->
-
-        <!-- Next Button -->
-        <!-- <button class="px-3 py-1 rounded-md   border-1 hover:text-[#4E3629] hover:bg-[#FED8B1] ">
-            Next
-        </button>
-    </div>
-</div>
-</template>
-<script>
-import { AdminHeader } from '#components';
-
-definePageMeta({
-  layout: 'admin',
-})
-</script> -->
-
-<script setup>
-import { AdminHeader } from '#components'
-import orderList from '~/components/orderList.vue'
-
-definePageMeta({
-  layout: 'admin',
-})
-
-// ✅ جلب الداتا
-const orders = ref([])
-
-onMounted(async () => {
-  try {
-    const response = await fetch('http://localhost:5000/admin/orders', {
-      headers: {
-        Authorization: `${localStorage.getItem('token')}` // لو عندك توكن
-      }
-    });
-    const data = await response.json()
-    orders.value = data
-  } catch (err) {
-    console.error('Error fetching orders:', err)
-  }
-})
-</script>
-
 <template>
-  <AdminHeader />
-  <div class="bg-[#4E3629] min-h-screen px-6 py-24 relative">
-    <div class="flex flex-col items-start justify-start mb-6 text-[#FFEAD6] absolute top-5 text-xl">
-      <p class="font-bold">Orders list</p>
-      <p>Home > order list</p>
-    </div>
+  <div class="p-6">
+    <h1 class="text-2xl font-bold mb-4">My Orders</h1>
 
-    <div class="bg-[#FFF7EF] rounded-xl p-7 mt-20">
-      <div class="flex items-center justify-between mb-15 font-bold text-2xl">
-        <p>Recent Purchases</p>
-        <i class="fa-solid fa-ellipsis-vertical"></i>
-      </div>
+    <div v-for="status in statuses" :key="status" class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">{{ status }}</h2>
+      <div v-if="filteredOrders(status).length">
+        <div
+          v-for="order in filteredOrders(status)"
+          :key="order._id"
+          class="border p-4 mb-4 rounded-lg shadow-sm"
+        >
+          <p class="text-sm text-gray-600 mb-2">Order ID: {{ order._id }}</p>
+          <p class="text-sm text-gray-600 mb-2">Date: {{ formatDate(order.createdAt) }}</p>
+          <p class="text-sm text-gray-600 mb-2">Total: ${{ order.total }}</p>
+          <p class="text-sm text-gray-600 mb-2">Customer: {{ order.user.email }}</p>
 
-      <div class="flex items-center justify-between w-full font-semibold text-lg">
-        <div class="flex items-center gap-2 text-center">
-          <input type="checkbox" /> Product
+          <ul class="list-disc pl-5 mt-2">
+            <li
+              v-for="book in order.books"
+              :key="book._id"
+              class="mb-1"
+            >
+              {{ book.title }} — {{ book.quantity }} × ${{ book.price }}
+            </li>
+          </ul>
         </div>
-        <p>Order ID</p>
-        <p>Date</p>
-        <p>Customer Name</p>
-        <p>Status</p>
-        <p>Amount</p>
       </div>
-
-      <hr class="border-t-2 border-gray-300 mt-5 mb-10 px-20" />
-
-      <!-- ✅ عرض الطلبات -->
-      <orderList
-        v-for="order in orders"
-        :key="order._id"
-        :order="order"
-      />
+      <p v-else class="text-gray-500">No orders with status "{{ status }}".</p>
     </div>
   </div>
 </template>
+
+<script setup>
+const statuses = ['Pending', 'Out for Delivery', 'Delivered']
+
+const { data: orders } = await useFetch('http://localhost:5000/orders', {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem('token')}`,
+  },
+})
+
+const filteredOrders = (status) => {
+  return orders.value?.filter(order => order.status === status)
+}
+
+const formatDate = (dateStr) => {
+  const date = new Date(dateStr)
+  return date.toLocaleString()
+}
+</script>
