@@ -5,135 +5,86 @@ const { data: authors } = await useFetch('http://localhost:5000/authors?page=1&l
 </script> -->
 
 <template>
-    
-    <div class="py-10 bg-[#fdf6ee]">
-  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 place-items-center">
-    <AuthorCard 
-    v-for="author in authors"
-    :key="author._id"
-    :author="author"
-    />
+  <div class="py-10 bg-[#fdf6ee]">
+    <!-- Cards Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 place-items-center">
+      <!-- Show skeletons while loading -->
+      <template v-if="loading">
+        <div v-for="n in 10" :key="n" class="animate-pulse w-40 h-52 bg-[#f1e4d8] rounded-xl"></div>
+      </template>
 
-  </div>
-
-  <!-- pagination -->
-  <!-- <div v-if="authors?.totalPages > 1" class="flex justify-center mt-8 gap-2 flex-wrap">
-  <button
-    class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
-    :disabled="page === 1"
-    @click="goToPage(page - 1)"
-  >
-    Prev
-  </button>
-
-  <button
-    v-for="i in authors.totalPages"
-    :key="i"
-    class="px-3 py-1 rounded border"
-    :class="{
-      'bg-blue-500 text-white border-blue-500': page === i,
-      'bg-white text-gray-800 border-gray-300 hover:bg-gray-100': page !== i
-    }"
-    @click="goToPage(i)"
-  >
-    {{ i }}
-  </button>
-
-  <button
-    class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
-    :disabled="page === authors.totalPages"
-    @click="goToPage(page + 1)"
-  >
-    Next
-  </button>
-</div> -->
-<div class="flex items-end justify-center space-x-1 mt-6">
-    <!-- Prev -->
-    <button
-      @click="prevPage"
-      :disabled="currentPage === 1"
-      class="px-3 py-1 rounded-md text-[#4E3629] hover:text-[#FED8B1] hover:bg-[#4E3629] disabled:opacity-50 border border-[#A67B5B]"
-    >
-      Prev
-    </button>
-
-    <!-- Pages -->
-    <template v-for="page in getPageNumbers()" :key="page">
-      <span
-        v-if="page === '...'"
-        class="px-2 py-1 text-[#4E3629]"
-      >
-        ...
-      </span>
-      <button
+      <!-- Show actual authors once loaded -->
+      <AuthorCard
         v-else
-        @click="goToPage(page)"
-        class="px-3 py-1 rounded-md border border-[#A67B5B]"
-        :class="{
-          'bg-[#4E3629] text-[#FED8B1] font-semibold': page === currentPage,
-          'text-[#4E3629] hover:text-[#FED8B1] hover:bg-[#4E3629]': page !== currentPage
-        }"
+        v-for="author in authors"
+        :key="author._id"
+        :author="author"
+      />
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex items-end justify-center space-x-1 mt-6">
+      <button
+        @click="prevPage"
+        :disabled="currentPage === 1"
+        class="px-3 py-1 rounded-md text-[#4E3629] hover:text-[#FED8B1] hover:bg-[#4E3629] disabled:opacity-50 border border-[#A67B5B]"
       >
-        {{ page }}
+        Prev
       </button>
-    </template>
 
-    <!-- Next -->
-    <button
-      @click="nextPage"
-      :disabled="currentPage === totalPages"
-      class="px-3 py-1 rounded-md text-[#4E3629] hover:text-[#FED8B1] hover:bg-[#4E3629] border border-[#A67B5B]"
-    >
-      Next
-    </button>
+      <template v-for="page in getPageNumbers()" :key="page">
+        <span v-if="page === '...'" class="px-2 py-1 text-[#4E3629]">...</span>
+        <button
+          v-else
+          @click="goToPage(page)"
+          class="px-3 py-1 rounded-md border border-[#A67B5B]"
+          :class="{
+            'bg-[#4E3629] text-[#FED8B1] font-semibold': page === currentPage,
+            'text-[#4E3629] hover:text-[#FED8B1] hover:bg-[#4E3629]': page !== currentPage
+          }"
+        >
+          {{ page }}
+        </button>
+      </template>
+
+      <button
+        @click="nextPage"
+        :disabled="currentPage === totalPages"
+        class="px-3 py-1 rounded-md text-[#4E3629] hover:text-[#FED8B1] hover:bg-[#4E3629] border border-[#A67B5B]"
+      >
+        Next
+      </button>
+    </div>
   </div>
-</div>
-
-
-
 </template>
-<!-- <script setup>
-import { ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 
-const route = useRoute()
-const router = useRouter()
-
-const page = ref(parseInt(route.query.page || '1'))
-const authors = ref(null)
-
-const fetchAuthors = async () => {
-  const res = await fetch(`http://localhost:5000/authors?page=${page.value}&limit=10`)
-  const data = await res.json()
-  authors.value = data
-}
-
-watch(() => page.value, fetchAuthors, { immediate: true })
-
-const goToPage = (newPage) => {
-  if (newPage >= 1 && newPage <= authors.value.totalPages) {
-    page.value = newPage
-    router.push({ query: { ...route.query, page: newPage } })
-  }
-}
-</script> -->
 <script setup>
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import AuthorCard from '@/components/AuthorCard.vue'
 
 const route = useRoute()
 const router = useRouter()
 
 const currentPage = ref(parseInt(route.query.page || '1'))
-const totalPages = ref(10) // You can update this after fetching authors
+const totalPages = ref(10)
 const authors = ref([])
+const loading = ref(true)
 
 const fetchAuthors = async () => {
-  const res = await fetch(`http://localhost:5000/authors?page=${currentPage.value}&limit=10`)
-  const data = await res.json()
-  authors.value = data.authors
-  totalPages.value = data.totalPages
+  loading.value = true
+  try {
+    const res = await fetch(`http://localhost:5000/authors?page=${currentPage.value}&limit=10`)
+    const data = await res.json()
+    authors.value = data.authors
+    totalPages.value = data.totalPages
+  } catch (err) {
+    console.error('Failed to fetch authors:', err)
+  } finally {
+    loading.value = false
+  }
 }
+
 watch(() => currentPage.value, fetchAuthors, { immediate: true })
 
 const goToPage = (page) => {
@@ -164,3 +115,4 @@ const getPageNumbers = () => {
   return pages
 }
 </script>
+
