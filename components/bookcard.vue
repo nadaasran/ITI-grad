@@ -1,7 +1,7 @@
 
 
  <template>
-  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden w-full transition-all hover:shadow-md hover:scale-105 mb-9">
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden w-full transition-all hover:shadow-md hover:scale-105 ">
     <!-- صورة المنتج -->
     <div class="relative pt-[100%] bg-white h-90% ">
       <img 
@@ -12,7 +12,7 @@
     </div>
 
     <!-- محتوى البطاقة -->
-    <div class="p-3 text-center ">
+    <div class=" text-center ">
       <!-- عنوان المنتج -->
       <h3 class="font-medium text-gray-900 text-sm line-clamp-2 mb-1 h-10 flex items-center justify-center">
         {{ title }}
