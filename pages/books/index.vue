@@ -36,7 +36,7 @@
           </div>
       </div>
       <div>
-          <img class="h-10 w-[100%]"  src="/images/Wooden Shelf.png" alt="">
+          <img class="h-10 w-[100%]"  src="/images/WoodenShelf.png" alt="">
       </div> -->
       <!-- Self Development section -->
       <!-- <div>
@@ -53,7 +53,7 @@
           </div>
       </div>
       <div>
-          <img class="h-10 w-[100%]"  src="/images/Wooden Shelf.png" alt="">
+          <img class="h-10 w-[100%]"  src="/images/WoodenShelf.png" alt="">
       </div> -->
       <!-- Fantasy section -->
       <!-- <div>
@@ -70,7 +70,7 @@
           </div>
       </div>
       <div>
-          <img class="h-10 w-[100%]"  src="/images/Wooden Shelf.png" alt="">
+          <img class="h-10 w-[100%]"  src="/images/WoodenShelf.png" alt="">
       </div> -->
       <!-- Science section -->
       <!-- <div>
@@ -87,7 +87,7 @@
           </div>
       </div>
       <div>
-          <img class="h-10 w-[100%]"  src="/images/Wooden Shelf.png" alt="">
+          <img class="h-10 w-[100%]"  src="/images/WoodenShelf.png" alt="">
       </div>
 
   </div> -->

@@ -1,46 +1,25 @@
 <template>
   <div class="px-20">
-    <!-- Filter Section -->
-    <div class="flex gap-3 items-center p-7 rounded-full bg-[#4E3629] mt-5 text-l font-semibold font-['Montserrat']">
-      <div class="flex items-center gap-2 text-[#FAD4A2]">
-        <i class="fa-solid fa-filter"></i>
-        <p>Filter</p>
-      </div>
+    <!-- filter -->
+    <FilterBar @filter="handleFilter"/>
+  <div v-if="isLoading" class="flex justify-center items-center my-6">
+  <i class="fa-solid fa-spinner fa-spin text-3xl text-[#4E3629]"></i>
+</div>
 
-      <!-- Price Range -->
-      <div class="flex items-center gap-2 bg-[#FAD4A2] text-[#4E3629] rounded-full px-4 h-10">
-        <label>Min</label>
-        <input type="number" v-model="minPrice" class="w-16 bg-transparent outline-none" />
-        <label>Max</label>
-        <input type="number" v-model="maxPrice" class="w-16 bg-transparent outline-none" />
-      </div>
-
-      <!-- Category -->
-      <div class="flex items-center gap-2 bg-[#FAD4A2] text-[#4E3629] rounded-full px-4 h-10">
-        <label>Category</label>
-        <select v-model="selectedCategory" class="bg-transparent outline-none">
-          <option value="">All</option>
-          <option value="Fiction">Fiction</option>
-          <option value="Science">Science</option>
-          <option value="Self Development">Self Development</option>
-        </select>
-      </div>
-
-      <!-- Author -->
-      <div class="flex items-center gap-2 bg-[#FAD4A2] text-[#4E3629] rounded-full px-4 h-10">
-        <label>Author</label>
-        <select v-model="selectedAuthor" class="bg-transparent outline-none">
-          <option value="">All</option>
-          <option value="Stephen">Stephen</option>
-          <option value="Hawking">Hawking</option>
-          <option value="John">John</option>
-        </select>
-      </div>
+    <!-- Skeleton Loader -->
+<div v-if="isLoading">
+  <div class="my-5 space-y-4" v-for="n in 3" :key="n">
+    <div class="h-6 w-40 bg-gray-300 rounded animate-pulse"></div>
+    <div class="flex flex-wrap gap-4 justify-between">
+      <div v-for="i in 4" :key="i" class="w-48 h-64 bg-gray-200 rounded shadow animate-pulse"></div>
     </div>
+  </div>
+</div>
 
-    <!-- Categories Section -->
-    <div v-for="(category, index) in categories" :key="index" :data-category="category.category">
-      <div class="flex justify-between font-semibold text-2xl my-5">
+<!-- Categories Section -->
+<div v-else v-for="(category, index) in categories" :key="index" :data-category="category.category">
+
+    <div class="flex justify-between font-semibold text-2xl my-5">
         <p class="font-['Playfair_Display']">{{ category.category }}</p>
         <a
           v-if="category.hasMore"
@@ -55,7 +34,8 @@
           v-for="book in category.books || []"
           :key="book._id"
           :title="book.title"
-          :author="book.author"
+          :author="book.author.name"
+          :category="book.category"
           :image="book.image"
           :price="book.price"
           :id="book._id"
@@ -91,20 +71,39 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import Card from '~/components/Card.vue';
+import FilterBar from '~/components/FilterBar.vue';
 
-const categories = ref([]);
+const categories = ref([
+  'Fiction', 'Science', 'Children', 'Finance & Business', 'Self Development', 'Productivity'
+]);
 const books = ref([]);
 const currentPage = ref(1);
 const totalPages = ref(1);
 const totalPagesArray = ref([]);
 
-const selectedCategory = ref('');
-const selectedAuthor = ref('');
-const minPrice = ref('');
-const maxPrice = ref('');
 
+const isLoading = ref(false);
+// const fetchCategories = async (page = 1) => {
+//   try {
+//     const token = localStorage.getItem('token');
+//     const res = await fetch(`http://localhost:5000/books/paged-categories?page=${page}`, {
+//       headers: { Authorization: token },
+//     });
+//     const data = await res.json();
+//     categories.value = data.data.map(category => ({
+//       ...category,
+//       page: 1,
+//       hasMore: true,
+//     }));
+//     totalPages.value = data.totalPages;
+//     totalPagesArray.value = Array.from({ length: totalPages.value }, (_, i) => i + 1);
+//   } catch (err) {
+//     console.error('Error fetching categories:', err);
+//   }
+// };
 const fetchCategories = async (page = 1) => {
   try {
+    isLoading.value = true;
     const token = localStorage.getItem('token');
     const res = await fetch(`http://localhost:5000/books/paged-categories?page=${page}`, {
       headers: { Authorization: token },
@@ -119,6 +118,8 @@ const fetchCategories = async (page = 1) => {
     totalPagesArray.value = Array.from({ length: totalPages.value }, (_, i) => i + 1);
   } catch (err) {
     console.error('Error fetching categories:', err);
+  } finally {
+    isLoading.value = false;
   }
 };
 
@@ -172,7 +173,26 @@ const prevPage = () => {
   }
 };
 
+const authors = ref([]);
+const loading = ref(false);
+
+const selectedCategory = ref('');
+const selectedAuthor = ref('');
+const minPrice = ref('');
+const maxPrice = ref('');
+
+const fetchAuthors = async () => {
+  try {
+    const res = await fetch('http://localhost:5000/authors');
+    const data = await res.json();
+    authors.value = data.data;
+  } catch (err) {
+    console.error('Error fetching authors:', err);
+  }
+};
+
 const fetchFilteredBooks = async () => {
+  loading.value = true;
   const token = localStorage.getItem('token');
   const query = new URLSearchParams();
 
@@ -189,12 +209,25 @@ const fetchFilteredBooks = async () => {
     books.value = data.success ? data.data : [];
   } catch (err) {
     console.error('Error fetching filtered books:', err);
+  } finally {
+    loading.value = false;
   }
 };
 
-watch([selectedCategory, selectedAuthor, minPrice, maxPrice], fetchFilteredBooks);
+const resetFilters = () => {
+  selectedCategory.value = '';
+  selectedAuthor.value = '';
+  minPrice.value = '';
+  maxPrice.value = '';
+  fetchFilteredBooks();
+};
+
+
+watch([selectedCategory, selectedAuthor, minPrice, maxPrice], fetchFilteredBooks, { deep: true });
 
 onMounted(() => {
   fetchCategories(currentPage.value);
+  fetchFilteredBooks();
+  fetchAuthors();
 });
 </script>

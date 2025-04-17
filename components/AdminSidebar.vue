@@ -69,9 +69,9 @@
           <span class="bg-[#E9D8C8] rounded-full px-2 py-0.5 text-xs">11</span>
         </li>
       </ul>
-    </div>
+    <!-- </div>
      <button @click.prevent="logout" class="bg-[#E9D8C8] rounded-full px-4 py-0.5 text-lg text-[#4E3629] w-50 mt-10">Logout</button>
-  </div>
+  </div> -->
 </template>
 <style >
 .activeA {
@@ -96,14 +96,14 @@ import { useAuthStore } from '~/stores/auth'
 const router = useRouter()
 const auth = useAuthStore()
 
-const logout = async () => {
-  auth.logout() ;   
-  // await router.push('/') ;
-  // Clear cookies
-  useCookie('token').value = null
-  useCookie('username').value = null
-  useCookie('role').value = null
-  // Redirect to login or home
-  return navigateTo('/')
-}
+// const logout = async () => {
+//   auth.logout() ;   
+//   // await router.push('/') ;
+//   // Clear cookies
+//   useCookie('token').value = null
+//   useCookie('username').value = null
+//   useCookie('role').value = null
+//   // Redirect to login or home
+//   return navigateTo('/')
+// }
 </script>

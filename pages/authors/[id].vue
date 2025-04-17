@@ -26,14 +26,14 @@
         :image="book.image"
         :title="book.title"
         :category="book.category"
-        :author="author.name"
+        :author="book.author.name"
         :price="book.price"
       />
     </div>
   </div>
     <!-- here the shelf -->
     <div>
-          <img class="h-15 w-[100%]"  src="/images/Wooden Shelf.png" alt="">
+          <img class="h-15 w-[100%]"  src="/images/WoodenShelf.png" alt="">
       </div>
   </template>
   
