@@ -432,21 +432,21 @@ const handleSubmit = async () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-
+    /* height: 100vh; */
     background: #4e342e; 
     color: #2e1e1e;
     font-family: "Arial", sans-serif;
   }
   
   .signup-box {
-
+    margin-top: 20px;
+    margin-bottom: 20px;
     background: #fdf6e3; 
     display: flex;
     padding: 20px;
     border-radius: 20px;
     width: 80%;
-    min-height: 90%;
+    min-height: 100%;
     text-align: center;
     transition: min-height 0.3s ease-in-out;
     max-width: 80%;

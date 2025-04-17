@@ -48,10 +48,13 @@
   </ul>
 
 
+  <button
+  class="mt-auto px-3 py-3 bg-[#4E3629] text-white text-md f rounded-lg hover:bg-[#6F4E37] transition-colors"
+  @click="subscribe"
+>
+  Subscribe Now
+</button>
 
-      <button class="mt-auto px-3 py-3 bg-[#4E3629] text-white text-md  f rounded-lg hover:bg-[#6F4E37] transition-colors">
-        Subscribe Now
-      </button>
     </div>
   </div>
 </template>
@@ -60,10 +63,36 @@
 export default {
   props: {
     plan: String,
-    price: String
+    price: String,
+  },
+  methods: {
+    async subscribe() {
+      try {
+        const response = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            plan: this.plan,
+            price: this.price,
+            userId: localStorage.getItem('userId') // أو حسب طريقة التخزين عندك
+          })
+        });
+
+        if (response.ok) {
+          alert('Subscription saved!');
+          // بعد الاشتراك ممكن تعيد توجيه المستخدم للبروفايل
+          this.$router.push('/profile/plans');
+        } else {
+          console.error('Subscription failed');
+        }
+      } catch (err) {
+        console.error('Error subscribing:', err);
+      }
+    }
   }
 }
 </script>
+
 <style scoped>
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }

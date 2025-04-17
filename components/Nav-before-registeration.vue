@@ -15,10 +15,17 @@
             </div>
         </nav>
     </div>
-</template>
+</template> 
 
 
 <style>
+@media (max-width: 768px) {
+  .auth .sign,
+  .auth .login {
+    width: 100%;
+    text-align: center;
+  }
+}
 .container {
     background-color: #4E3629;
     /* width: 100vw; */
