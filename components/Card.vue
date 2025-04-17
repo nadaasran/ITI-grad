@@ -1,8 +1,8 @@
 <template>
-    <div class="text-black py-2 px-4 flex flex-col items-center hover:shadow-2xl w-60 rounded-lg shadow-md overflow-hidden border border-gray-200 mb-9 hover:drop-shadow-xl transform hover:scale-105"> 
+    <div class="text-black py-2 px-4 flex flex-col justify-between hover:shadow-2xl w-60 rounded-lg shadow-md overflow-hidden border border-gray-200 mb-9 hover:drop-shadow-xl transform hover:scale-105"> 
       <img class="w-60" :src="image || '/images/basic.png'" @error="e => e.target.src = '/images/basic.png'" alt="Book Cover">
       
-      <div class="flex justify-between items-center mt-3 gap-4">
+      <div class="flex justify-between items-between mt-3 gap-4">
         <h4 class="font-bold">{{ title }}</h4>
         <i
           :class="isFavorite ? 'fa-solid fa-heart text-[#4E3629]' : 'fa-regular fa-heart'"
@@ -15,8 +15,8 @@
         <p>{{ price }} LE</p>
         <p class="font-light">{{ author }}</p>
       </div>
-      <p>⭐⭐⭐⭐⭐</p>
-      <NuxtLink :to="`/books2/${id}`" class="bg-[#4E3629] rounded-full text-white cursor-pointer px-15 py-2">
+      <img class="h-5 w-24 mb-2" src="/images/rate.png" alt="">
+      <NuxtLink :to="`/books2/${id}`" class="bg-[#4E3629] rounded-full text-white cursor-pointer px-15 py-2 w-full">
         View Book
       </NuxtLink>
     </div>
