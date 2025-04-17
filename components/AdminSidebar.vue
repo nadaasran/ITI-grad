@@ -70,6 +70,7 @@
         </li>
       </ul>
     </div>
+     <button @click.prevent="logout" class="bg-[#E9D8C8] rounded-full px-4 py-0.5 text-lg text-[#4E3629] w-50 mt-10">Logout</button>
   </div>
 </template>
 <style >
@@ -89,4 +90,20 @@
 
 
 <script setup>
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '~/stores/auth'
+
+const router = useRouter()
+const auth = useAuthStore()
+
+const logout = async () => {
+  auth.logout() ;   
+  // await router.push('/') ;
+  // Clear cookies
+  useCookie('token').value = null
+  useCookie('username').value = null
+  useCookie('role').value = null
+  // Redirect to login or home
+  return navigateTo('/')
+}
 </script>

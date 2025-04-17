@@ -14,8 +14,9 @@
 
      <trend />
      <about />
-     
+     <author/>
      <!-- authors section - -->
+<<<<<<< HEAD
      <div class="mb-8">
        <author />
      </div>
@@ -30,10 +31,29 @@
     </div>
 </section>
 
+=======
+     
+     <!-- plans section - -->
+     <section id="plans" class="px-4 sm:px-6 lg:px-8 bg-[#FFF7EF] py-12  flex items-center justify-center">
+       <div class="max-w-6xl mx-auto">
+         <h2 class="text-3xl font-bold text-yellow-950 mb-8">Choose your Plan</h2>
+         
+         <div class="flex flex-col md:flex-row gap-16 justify-center items-center mt-16">
+           <SubscriptionCard plan="Reader" price="100 / month" />
+           <SubscriptionCard plan="Bookworm" price="300 / month" />
+           <SubscriptionCard plan="Master" price="500 / month" />
+         </div>
+       </div>
+     </section>
+>>>>>>> 2dbb5e4d447d9e35c33289046bf4f39a83deae9a
      <!-- contact us -->
       <div id="contact">
         <contact />
       </div>
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 2dbb5e4d447d9e35c33289046bf4f39a83deae9a
    </div>
  </template>
  
@@ -44,6 +64,7 @@
  import SubscriptionCard from '~/components/Subscription Card.vue'
  import contact from '~/components/Contact.vue'
  import footer from '~/components/Footer.vue'
+
  </script>
  
  <style scoped>
