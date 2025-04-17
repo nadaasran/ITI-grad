@@ -23,9 +23,28 @@
     <h2 class="text-3xl font-bold text-yellow-950 mb-8  ">Choose your Plan</h2>
     <br>
     <div class="flex flex-col md:flex-row gap-16 justify-center items-center">
-        <SubscriptionCard plan="Reader" price="100 / month" />
-        <SubscriptionCard plan="Bookworm" price="300 / month" />
-        <SubscriptionCard plan="Master" price="500 / month" />
+        <SubscriptionCard plan="Reader" price="100 / month" :features="[
+    'Access to 500 books',
+    'Offline listening',
+    '1 device only',
+    'Priority support'
+  ]"
+  @selected="handlePlanSelection" />
+        <SubscriptionCard plan="Bookworm" price="300 / month"  :features="[
+    'Access to 1000+ books',
+    'Offline listening',
+    'Share with 1 family member',
+    'Priority support'
+    
+  ]" 
+  @selected="handlePlanSelection"/>
+        <SubscriptionCard plan="Master" price="500 / month" :features="[
+    'Unlimited books',
+    'Offline & Online sync',
+    'Share with 3 family members',
+    'Priority support'
+  ]" 
+  @selected="handlePlanSelection" />
     </div>
 </section>
 
@@ -43,6 +62,20 @@
  import author from '~/components/author.vue'
  import SubscriptionCard from '~/components/Subscription Card.vue'
  import contact from '~/components/Contact.vue'
+
+ const handlePlanSelection = async ({ plan, price }) => {
+  const res = await fetch('/api/pay', {
+    method: 'POST',
+    body: JSON.stringify({ plan, price }),
+    headers: { 'Content-Type': 'application/json' }
+  })
+
+  const data = await res.json()
+
+  if (data.paymentUrl) {
+    window.location.href = data.paymentUrl
+  }
+}
 
  </script>
  
