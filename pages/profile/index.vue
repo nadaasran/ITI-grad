@@ -248,7 +248,7 @@ onMounted(() => {
   form.value.mobile = auth.mobile || localStorage.getItem('mobile') || '';
   form.value.location = auth.location || localStorage.getItem('location') || '';
   form.value.postalCode = auth.postalCode || localStorage.getItem('postalCode') || '';
-  form.value.email = auth.email || localStorage.getItem('email') || '';
+  form.value.email = auth.email || localStorage.getItem('email');
   imagePreview.value = auth.profileImage || localStorage.getItem('userImage') || '/images/user.jpg';
 })
 
@@ -282,7 +282,6 @@ const updateProfile = async () => {
       body: JSON.stringify({
         name: form.value.name,
         fullName: form.value.fullName,
-        email: form.value.email,
         mobile: form.value.mobile,
         location: form.value.location,
         postalCode: form.value.postalCode,

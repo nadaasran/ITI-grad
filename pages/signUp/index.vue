@@ -412,6 +412,65 @@ const handleSubmit = async () => {
 
   
   <style scoped>
+  @media (max-width: 768px) {
+  .signup-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 10px;
+    margin-top: -60px;
+  }
+
+  .signup-box {
+    flex-direction: column;
+    padding: 20px 15px;
+    width: 100%;
+    max-width: 400px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .signup-form {
+    padding: 0;
+    width: 100%;
+  }
+
+  .illustration {
+    display: none;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  input {
+    font-size: 14px;
+  }
+
+  .google-btn,
+  .signup-btn {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .terms {
+    font-size: 14px;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .error-message {
+    font-size: 13px;
+  }
+
+  .login-link {
+    font-size: 12px;
+  }
+  .illustration img{
+    display: none;
+  }
+}
+
  .error-message {
   color: red;
   font-size: 14px;
@@ -432,7 +491,7 @@ const handleSubmit = async () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* height: 100vh; */
+    min-height: 100vh;
     background: #4e342e; 
     color: #2e1e1e;
     font-family: "Arial", sans-serif;

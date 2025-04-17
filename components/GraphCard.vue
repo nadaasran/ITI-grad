@@ -8,7 +8,7 @@
           <!-- <button class="px-2 py-1 rounded border border-primary">Yearly</button> -->
         </div>
       </div>
-      <div class="h-40 bg-white rounded border">
+      <div class="h-64 w-full bg-white rounded border p-2">
           <Line :data="chartData" :options="chartOptions" />
       </div>
     </div>
@@ -85,48 +85,85 @@ onMounted(async () => {
 // -----------------------------------------------------
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
+// const chartData = computed(() => {
+//   const graphData = stats.value?.salesGraph || []
+
+//   return {
+//     labels: 
+//      graphData.map(item => {
+//       const month = item._id?.month || 0
+//       return months[month - 1] ?? 'N/A'
+//     }),
+    
+//     datasets: [
+//       {
+//         label: 'Sales',
+//         data: graphData.map(item => item.totalSales),
+//         borderColor: '#4E3629',
+//         backgroundColor: 'rgba(78, 54, 41, 0.1)',
+//         fill: true,
+//         tension: 0.4,
+//       },
+//     ],
+//   }
+// })
+
+// // -----------------------------------------------------
+// // ✅ Chart Options
+// // -----------------------------------------------------
+// const chartOptions = {
+//   responsive: true,
+//   plugins: {
+//     legend: {
+//       display: false,
+//     },
+//   },
+//   scales: {
+//     y: {
+//       beginAtZero: true,
+//       min: 0,           // 👈 Minimum value
+//       max: 5000,        // 👈 Maximum value
+//       ticks: {
+//         stepSize: 500,  // 👈 Distance between ticks (optional)
+//       },
+//     },
+//   },
+// }
 const chartData = computed(() => {
   const graphData = stats.value?.salesGraph || []
 
+  // Step 1: Create a lookup map: month number => totalSales
+  const salesMap = new Map()
+  graphData.forEach(item => {
+    const month = item._id?.month
+    if (month) {
+      salesMap.set(month, item.totalSales)
+    }
+  })
+
+  // Step 2: Generate full 12-month data, filling missing with 0
+  const allSales = months.map((_, index) => {
+    const monthIndex = index + 1 // Month is 1-based
+    return salesMap.get(monthIndex) || 0
+  })
+
   return {
-    labels: graphData.map(item => {
-      const month = item._id?.month || 0
-      return months[month - 1] ?? 'N/A'
-    }),
+    labels: months, // Always all 12 months
     datasets: [
       {
         label: 'Sales',
-        data: graphData.map(item => item.totalSales),
+        data: allSales,
         borderColor: '#4E3629',
         backgroundColor: 'rgba(78, 54, 41, 0.1)',
         fill: true,
         tension: 0.4,
+        pointRadius: 4,
+        pointHoverRadius: 6,
       },
     ],
   }
 })
 
-// -----------------------------------------------------
-// ✅ Chart Options
-// -----------------------------------------------------
-const chartOptions = {
-  responsive: true,
-  plugins: {
-    legend: {
-      display: false,
-    },
-  },
-  scales: {
-    y: {
-      beginAtZero: true,
-      min: 0,           // 👈 Minimum value
-      max: 500,        // 👈 Maximum value
-      ticks: {
-        stepSize: 50,  // 👈 Distance between ticks (optional)
-      },
-    },
-  },
-}
 </script>
 
   

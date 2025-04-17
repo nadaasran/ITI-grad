@@ -44,7 +44,7 @@ const fetchDownloads = async () => {
   try {
     const res = await $fetch('http://localhost:5000/orders/downloads', {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `${localStorage.getItem('token')}`,
       },
     })
     downloads.value = res
@@ -59,13 +59,6 @@ const formatDate = (date) => {
   return new Date(date).toLocaleDateString()
 }
 
-const browseBooks = () => {
-  navigateTo('/books')
-}
-
-onMounted(() => {
-  fetchDownloads()
-})
 </script>
 
 <style scoped>

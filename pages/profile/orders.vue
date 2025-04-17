@@ -73,7 +73,7 @@
   })
   
   const browseBooks = () => {
-    navigateTo('/books')
+    navigateTo('/books2')
   }
   const removeBookFromOrder = async (orderId, bookId) => {
   try {
@@ -267,7 +267,7 @@
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `${localStorage.getItem('token')}`,
         },
       })
   

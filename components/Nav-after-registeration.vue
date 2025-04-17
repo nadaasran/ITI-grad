@@ -6,7 +6,7 @@
             </div>
             <div class="links flex items-center">
                 <NuxtLink href="/" class="px-3 py-5" active-class="active">Home</NuxtLink>
-                <NuxtLink href="/books" class="px-5 py-2" active-class="active">Books</NuxtLink>
+                <NuxtLink href="/books2" class="px-5 py-2" active-class="active">Books</NuxtLink>
                 <NuxtLink href="/#plans" class="px-5 py-2">Plans</NuxtLink>
                 <NuxtLink href="/#contact" class="px-5 py-2" >Contact Us</NuxtLink>
                 <NuxtLink href="/cart" class="px-5 py-2" active-class="active"><FontAwesomeIcon :icon="['fas', 'cart-shopping']" class="cart-icon"/></NuxtLink>
@@ -45,7 +45,7 @@
       <!-- Links (Desktop) -->
       <div class="links hidden md:flex items-center">
         <NuxtLink href="/" class="px-3 py-5" active-class="active">Home</NuxtLink>
-        <NuxtLink href="/books" class="px-5 py-2" active-class="active">Books</NuxtLink>
+        <NuxtLink href="/books2" class="px-5 py-2" active-class="active">Books</NuxtLink>
         <NuxtLink href="/#plans" class="px-5 py-2">Plans</NuxtLink>
         <NuxtLink href="/#contact" class="px-5 py-2">Contact Us</NuxtLink>
         <NuxtLink href="/cart" class="px-5 py-2" active-class="active">
@@ -71,7 +71,7 @@
       </div>
 
       <!-- Mobile Menu (only visible when isMenuOpen) -->
-      <div v-if="isMenuOpen" class="absolute top-10 mx-55 w-60 h-130 bg-[#4E3629] md:hidden flex flex-col items-center px-6 py-4 z-50">
+      <div v-if="isMenuOpen" class="absolute top-10 mx-38 w-60 h-130 bg-[#4E3629] md:hidden flex flex-col items-center px-6 py-4 z-50">
         <div class="flex items-center mt-4 gap-3">
           <!-- <NuxtLink v-if="username" to="/profile" class="name">{{ username }}</NuxtLink> -->
           <NuxtLink v-if="username" to="/profile" class="image">
@@ -79,7 +79,7 @@
           </NuxtLink>
         </div>
         <NuxtLink href="/" class="links py-6 " active-class="active">Home</NuxtLink>
-        <NuxtLink href="/books" class="links py-6 " active-class="active">Books</NuxtLink>
+        <NuxtLink href="/books2" class="links py-6 " active-class="active">Books</NuxtLink>
         <NuxtLink href="/#plans" class="links py-6 ">Plans</NuxtLink>
         <NuxtLink href="/#contact" class="links py-6 ">Contact Us</NuxtLink>
         <NuxtLink href="/cart" class="py-6 " active-class="active">
