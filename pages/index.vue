@@ -10,8 +10,8 @@
          </h1>
        </div>
      </section>
- 
      <!-- trend books section -->
+
      <trend />
      <about />
      
@@ -20,23 +20,20 @@
        <author />
      </div>
  
-     <!-- plans section - -->
-     <section id="plans" class="px-4 sm:px-6 lg:px-8 bg-[#FFF7EF] py-12  flex items-center justify-center">
-       <div class="max-w-6xl mx-auto">
-         <h2 class="text-3xl font-bold text-yellow-950 mb-8">Choose your Plan</h2>
-         
-         <div class="flex flex-col md:flex-row gap-16 justify-center items-center mt-16">
-           <SubscriptionCard plan="Reader" price="100 / month" />
-           <SubscriptionCard plan="Bookworm" price="300 / month" />
-           <SubscriptionCard plan="Master" price="500 / month" />
-         </div>
-       </div>
-     </section>
+     <section id="plans" class="bg-[#FFF7EF] py-16 px-4 sm:px-8">
+    <h2 class="text-3xl font-bold text-yellow-950 mb-8  ">Choose your Plan</h2>
+    <br>
+    <div class="flex flex-col md:flex-row gap-16 justify-center items-center">
+        <SubscriptionCard plan="Reader" price="100 / month" />
+        <SubscriptionCard plan="Bookworm" price="300 / month" />
+        <SubscriptionCard plan="Master" price="500 / month" />
+    </div>
+</section>
+
      <!-- contact us -->
       <div id="contact">
         <contact />
       </div>
-    <Footer />
    </div>
  </template>
  
