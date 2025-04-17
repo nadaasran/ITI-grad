@@ -20,14 +20,12 @@
         <label>Category</label>
         <select v-model="selectedCategory" class="bg-transparent outline-none">
           <option value="">All</option>
-          <option value="Fiction">Fiction</option>
-          <option value="Science">Science</option>
-          <option value="Self Development">Self Development</option>
+          <option v-for="(category, index) in categoriesList" :key="index" :value="category">{{ category }}</option>
         </select>
       </div>
 
       <!-- Author -->
-      <div class="flex items-center gap-2 bg-[#FAD4A2] text-[#4E3629] rounded-full px-4 h-10">
+      <!-- <div class="flex items-center gap-2 bg-[#FAD4A2] text-[#4E3629] rounded-full px-4 h-10">
         <label>Author</label>
         <select v-model="selectedAuthor" class="bg-transparent outline-none">
           <option value="">All</option>
@@ -35,7 +33,7 @@
           <option value="Hawking">Hawking</option>
           <option value="John">John</option>
         </select>
-      </div>
+      </div> -->
     </div>
 
     <!-- Categories Section -->
@@ -93,6 +91,7 @@ import { ref, onMounted, watch } from 'vue';
 import Card from '~/components/Card.vue';
 
 const categories = ref([]);
+const categoriesList = ref([]);
 const books = ref([]);
 const currentPage = ref(1);
 const totalPages = ref(1);
@@ -186,15 +185,50 @@ const fetchFilteredBooks = async () => {
       headers: { Authorization: token },
     });
     const data = await res.json();
-    books.value = data.success ? data.data : [];
+
+    if (data.success) {
+      // Update the displayed categories with just the filtered result
+      categories.value = [{
+        category: 'Filtered Results',
+        books: data.data,
+        hasMore: false,
+        page: 1
+      }];
+    } else {
+      categories.value = [];
+    }
   } catch (err) {
     console.error('Error fetching filtered books:', err);
   }
 };
 
+const fetchCategoriesAndBooks = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await fetch('http://localhost:5000/books', {
+      headers: { Authorization: token },
+    });
+    const data = await res.json();
+
+    if (data.success && data.data.length > 0) {
+      books.value = data.data;
+
+      // Extract unique categories from the books data
+      const uniqueCategories = Array.from(new Set(data.data.map((book) => book.category)));
+
+      categoriesList.value = uniqueCategories;
+    }
+  } catch (err) {
+    console.error('Error fetching books:', err);
+  }
+};
+
+
+
 watch([selectedCategory, selectedAuthor, minPrice, maxPrice], fetchFilteredBooks);
 
 onMounted(() => {
   fetchCategories(currentPage.value);
+  fetchCategoriesAndBooks();
 });
 </script>

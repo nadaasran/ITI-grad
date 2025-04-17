@@ -16,7 +16,7 @@
   </div>
 </div>
 <div>
-            <img src="/images/wooden Shelf.png" alt="shelf" />
+            <img src="/images/woodenShelf.png" alt="shelf" />
           </div>
 </template>
 
