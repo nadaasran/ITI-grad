@@ -51,9 +51,9 @@
 
 </script> -->
 
-<template>
-    <div class="flex gap-2 w-full my-18 mx-5">
-        <div class="w-1/2">
+<template >
+    <div class="flex-row gap-2 w-full my-18 mx-5 md:flex items-center">
+        <div class="md:w-1/2 w-[90%] ">
             <cartCard 
                 v-for="(item, index) in cartItems" 
                 :key="index"
@@ -63,7 +63,7 @@
             />
         </div>
 
-        <div class="w-1/2 me-10 pr-10 pl-5">
+        <div class="w-[90%] me-10 pr-10 pl-5 md:w-1/2">
             <div>
                 <h2 class="mb-5 font-bold text-2xl text-center">Cart totals</h2>
                 <hr class="border-1 border-[#4E3629] mb-5">
@@ -154,7 +154,7 @@ const checkoutNow = async () => {
   };
   // /my-orders
   try {
-    const res = await fetch('http://localhost:5000/orders', {
+    const res = await fetch('http://localhost:5000/cart/', {
       method: 'POST',
       headers: {
         'Authorization': `${token}`,
@@ -221,7 +221,7 @@ onMounted(async () => {
       alert("No token found in localStorage");
       return;
     }
-    const res = await fetch('http://localhost:5000/orders/my-orders',{
+    const res = await fetch('http://localhost:5000/cart/',{
         method: 'GET',  
         headers: {
         'Authorization': `${token}`, // ✅ تمرير التوكين هنا
@@ -229,6 +229,8 @@ onMounted(async () => {
       }
     });
     const data = await res.json();
+    console.log("✅ بيانات السلة:", data);
+
     // تحويل بيانات الـ books إلى cartItems بالشكل المطلوب
     // cartItems.value = data.books.map(book => ({
     //   id: book.bookId,
@@ -238,20 +240,24 @@ onMounted(async () => {
     //   image: book.image // تقدر تستخدم book.image إذا كان موجود
     // }));
 
-    cartItems.value = data.flatMap(el => 
-      el.books.map(book => ({
+    if (data.books && data.books.length > 0) {
+      cartItems.value = data.books.map(book => ({
         id: book.bookId,
         title: book.title,
         price: book.price,
         quantity: book.quantity,
-        image: book.image // تقدر تستخدم book.image إذا كان موجود
-      }))
-    );
-
-    apiTotal.value = data.total;
+        image: book.image
+      }));
+      apiTotal.value = data.total;
+    } else {
+      console.log("🛒 السلة فارغة");
+    }
 
   } catch (error) {
     console.error("فشل في تحميل السلة:", error);
   }
 });
 </script>
+<style scoped>
+
+</style>

@@ -6,7 +6,7 @@
             </div>
             <div class="links flex items-center">
                 <NuxtLink href="/" class="px-3 py-5" active-class="active">Home</NuxtLink>
-                <NuxtLink href="/books" class="px-5 py-2" active-class="active">Books</NuxtLink>
+                <NuxtLink href="/books2" class="px-5 py-2" active-class="active">Books</NuxtLink>
                 <NuxtLink href="/#plans" class="px-5 py-2">Plans</NuxtLink>
                 <NuxtLink href="/#contact" class="px-5 py-2" >Contact Us</NuxtLink>
                 <NuxtLink href="/cart" class="px-5 py-2" active-class="active"><FontAwesomeIcon :icon="['fas', 'cart-shopping']" class="cart-icon"/></NuxtLink>
