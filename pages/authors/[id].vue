@@ -26,7 +26,7 @@
         :image="book.image"
         :title="book.title"
         :category="book.category"
-        :author="author.name"
+        :author="book.author.name"
         :price="book.price"
       />
     </div>

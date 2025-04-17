@@ -57,7 +57,8 @@
           v-for="book in category.books || []"
           :key="book._id"
           :title="book.title"
-          :author="book.author"
+          :author="book.author.name"
+          :category="book.category"
           :image="book.image"
           :price="book.price"
           :id="book._id"
@@ -107,20 +108,39 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import Card from '~/components/Card.vue';
+import FilterBar from '~/components/FilterBar.vue';
 
-const categories = ref([]);
+const categories = ref([
+  'Fiction', 'Science', 'Children', 'Finance & Business', 'Self Development', 'Productivity'
+]);
 const books = ref([]);
 const currentPage = ref(1);
 const totalPages = ref(1);
 const totalPagesArray = ref([]);
 
-const selectedCategory = ref('');
-const selectedAuthor = ref('');
-const minPrice = ref('');
-const maxPrice = ref('');
 
+const isLoading = ref(false);
+// const fetchCategories = async (page = 1) => {
+//   try {
+//     const token = localStorage.getItem('token');
+//     const res = await fetch(`http://localhost:5000/books/paged-categories?page=${page}`, {
+//       headers: { Authorization: token },
+//     });
+//     const data = await res.json();
+//     categories.value = data.data.map(category => ({
+//       ...category,
+//       page: 1,
+//       hasMore: true,
+//     }));
+//     totalPages.value = data.totalPages;
+//     totalPagesArray.value = Array.from({ length: totalPages.value }, (_, i) => i + 1);
+//   } catch (err) {
+//     console.error('Error fetching categories:', err);
+//   }
+// };
 const fetchCategories = async (page = 1) => {
   try {
+    isLoading.value = true;
     const token = localStorage.getItem('token');
     const res = await fetch(`http://localhost:5000/books/paged-categories?page=${page}`, {
       headers: { Authorization: token },
@@ -135,6 +155,8 @@ const fetchCategories = async (page = 1) => {
     totalPagesArray.value = Array.from({ length: totalPages.value }, (_, i) => i + 1);
   } catch (err) {
     console.error('Error fetching categories:', err);
+  } finally {
+    isLoading.value = false;
   }
 };
 
@@ -188,7 +210,26 @@ const prevPage = () => {
   }
 };
 
+const authors = ref([]);
+const loading = ref(false);
+
+const selectedCategory = ref('');
+const selectedAuthor = ref('');
+const minPrice = ref('');
+const maxPrice = ref('');
+
+const fetchAuthors = async () => {
+  try {
+    const res = await fetch('http://localhost:5000/authors');
+    const data = await res.json();
+    authors.value = data.data;
+  } catch (err) {
+    console.error('Error fetching authors:', err);
+  }
+};
+
 const fetchFilteredBooks = async () => {
+  loading.value = true;
   const token = localStorage.getItem('token');
   const query = new URLSearchParams();
 
@@ -205,12 +246,25 @@ const fetchFilteredBooks = async () => {
     books.value = data.success ? data.data : [];
   } catch (err) {
     console.error('Error fetching filtered books:', err);
+  } finally {
+    loading.value = false;
   }
 };
 
-watch([selectedCategory, selectedAuthor, minPrice, maxPrice], fetchFilteredBooks);
+const resetFilters = () => {
+  selectedCategory.value = '';
+  selectedAuthor.value = '';
+  minPrice.value = '';
+  maxPrice.value = '';
+  fetchFilteredBooks();
+};
+
+
+watch([selectedCategory, selectedAuthor, minPrice, maxPrice], fetchFilteredBooks, { deep: true });
 
 onMounted(() => {
   fetchCategories(currentPage.value);
+  fetchFilteredBooks();
+  fetchAuthors();
 });
 </script>
