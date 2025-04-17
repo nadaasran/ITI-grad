@@ -1,14 +1,17 @@
 <template>
+
   <div class="px-4 md:px-20 bg-[#fdf6ee]">
     <!-- Filter Section -->
     <div class="flex flex-col md:flex-row gap-4 md:gap-3 items-center p-6 md:p-7 rounded-3xl bg-[#4E3629] mt-5 text-base font-semibold font-['Montserrat']">
       <!-- Filter Label -->
+
       <div class="flex items-center gap-2 text-[#FAD4A2]">
         <i class="fa-solid fa-filter"></i>
         <p>Filter</p>
       </div>
 
       <!-- Price Range -->
+
       <div class="flex flex-col sm:flex-row items-center gap-2 bg-[#FAD4A2] text-[#4E3629] rounded-full px-3 py-2 h-auto sm:h-10 w-full sm:w-auto">
         <label>Min</label>
         <input type="number" v-model="minPrice" class="w-full sm:w-16 bg-transparent outline-none" />
@@ -31,17 +34,23 @@
       <div class="flex flex-col sm:flex-row items-center gap-2 bg-[#FAD4A2] text-[#4E3629] rounded-full px-4 py-2 h-auto sm:h-10 w-full sm:w-auto">
         <label>Author</label>
         <select v-model="selectedAuthor" class="bg-transparent outline-none w-full sm:w-auto">
+
           <option value="">All</option>
           <option value="Stephen">Stephen</option>
           <option value="Hawking">Hawking</option>
           <option value="John">John</option>
         </select>
+
       </div>
+
+
     </div>
 
     <!-- Categories Section -->
     <div v-for="(category, index) in categories" :key="index" :data-category="category.category">
+
       <div class="flex flex-col sm:flex-row justify-between font-semibold text-xl sm:text-2xl my-5">
+
         <p class="font-['Playfair_Display']">{{ category.category }}</p>
         <a
           v-if="category.hasMore"
@@ -57,8 +66,7 @@
           v-for="book in category.books || []"
           :key="book._id"
           :title="book.title"
-          :author="book.author.name"
-          :category="book.category"
+          :author="book.author"
           :image="book.image"
           :price="book.price"
           :id="book._id"
@@ -108,39 +116,21 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import Card from '~/components/Card.vue';
-import FilterBar from '~/components/FilterBar.vue';
 
-const categories = ref([
-  'Fiction', 'Science', 'Children', 'Finance & Business', 'Self Development', 'Productivity'
-]);
+const categories = ref([]);
+const categoriesList = ref([]);
 const books = ref([]);
 const currentPage = ref(1);
 const totalPages = ref(1);
 const totalPagesArray = ref([]);
 
+const selectedCategory = ref('');
+const selectedAuthor = ref('');
+const minPrice = ref('');
+const maxPrice = ref('');
 
-const isLoading = ref(false);
-// const fetchCategories = async (page = 1) => {
-//   try {
-//     const token = localStorage.getItem('token');
-//     const res = await fetch(`http://localhost:5000/books/paged-categories?page=${page}`, {
-//       headers: { Authorization: token },
-//     });
-//     const data = await res.json();
-//     categories.value = data.data.map(category => ({
-//       ...category,
-//       page: 1,
-//       hasMore: true,
-//     }));
-//     totalPages.value = data.totalPages;
-//     totalPagesArray.value = Array.from({ length: totalPages.value }, (_, i) => i + 1);
-//   } catch (err) {
-//     console.error('Error fetching categories:', err);
-//   }
-// };
 const fetchCategories = async (page = 1) => {
   try {
-    isLoading.value = true;
     const token = localStorage.getItem('token');
     const res = await fetch(`http://localhost:5000/books/paged-categories?page=${page}`, {
       headers: { Authorization: token },
@@ -155,8 +145,6 @@ const fetchCategories = async (page = 1) => {
     totalPagesArray.value = Array.from({ length: totalPages.value }, (_, i) => i + 1);
   } catch (err) {
     console.error('Error fetching categories:', err);
-  } finally {
-    isLoading.value = false;
   }
 };
 
@@ -210,26 +198,7 @@ const prevPage = () => {
   }
 };
 
-const authors = ref([]);
-const loading = ref(false);
-
-const selectedCategory = ref('');
-const selectedAuthor = ref('');
-const minPrice = ref('');
-const maxPrice = ref('');
-
-const fetchAuthors = async () => {
-  try {
-    const res = await fetch('http://localhost:5000/authors');
-    const data = await res.json();
-    authors.value = data.data;
-  } catch (err) {
-    console.error('Error fetching authors:', err);
-  }
-};
-
 const fetchFilteredBooks = async () => {
-  loading.value = true;
   const token = localStorage.getItem('token');
   const query = new URLSearchParams();
 
@@ -243,28 +212,50 @@ const fetchFilteredBooks = async () => {
       headers: { Authorization: token },
     });
     const data = await res.json();
-    books.value = data.success ? data.data : [];
+
+    if (data.success) {
+      // Update the displayed categories with just the filtered result
+      categories.value = [{
+        category: 'Filtered Results',
+        books: data.data,
+        hasMore: false,
+        page: 1
+      }];
+    } else {
+      categories.value = [];
+    }
   } catch (err) {
     console.error('Error fetching filtered books:', err);
-  } finally {
-    loading.value = false;
   }
 };
 
-const resetFilters = () => {
-  selectedCategory.value = '';
-  selectedAuthor.value = '';
-  minPrice.value = '';
-  maxPrice.value = '';
-  fetchFilteredBooks();
+const fetchCategoriesAndBooks = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await fetch('http://localhost:5000/books', {
+      headers: { Authorization: token },
+    });
+    const data = await res.json();
+
+    if (data.success && data.data.length > 0) {
+      books.value = data.data;
+
+      // Extract unique categories from the books data
+      const uniqueCategories = Array.from(new Set(data.data.map((book) => book.category)));
+
+      categoriesList.value = uniqueCategories;
+    }
+  } catch (err) {
+    console.error('Error fetching books:', err);
+  }
 };
 
 
-watch([selectedCategory, selectedAuthor, minPrice, maxPrice], fetchFilteredBooks, { deep: true });
+
+watch([selectedCategory, selectedAuthor, minPrice, maxPrice], fetchFilteredBooks);
 
 onMounted(() => {
   fetchCategories(currentPage.value);
-  fetchFilteredBooks();
-  fetchAuthors();
+  fetchCategoriesAndBooks();
 });
 </script>

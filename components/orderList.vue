@@ -1,50 +1,28 @@
-<!-- <template>
-    <div>
-        <div class="flex items-center justify-between w-full">
-            <div class="flex items-center gap-2 text-center">
-                <input type="checkbox"> Lorem, ipsum </input>
-
-            </div>
-            <p>#25426</p>
-            <p>Nov 7th,2023</p>
-            <div class="flex items-center gap-2">
-                <img src="/images/user.jpg" class="w-10 h-10 rounded-full" alt="">
-                <p>kavin</p>
-            </div>
-            <p>status</p>
-            <p>amount</p>
-        </div>
+<template>
+  <div class="flex justify-between w-full py-4 border-b border-gray-300">
+    <div class="flex gap-2 items-start w-1/5">
+      <input type="checkbox" class="mt-1" />
+      <div>
+        <p v-for="(book, index) in order.books" :key="index">
+          {{ book.title }} x{{ book.quantity }}
+        </p>
+      </div>
     </div>
-    <hr class="  border-t-2 border-gray-300  text-center mt-5 mb-10 flex items-center justify-center px-20">
+    <p class="w-1/5 truncate">{{ order._id }}</p>
+    <p class="w-1/5">{{ formatDate(order.createdAt) }}</p>
+    <p class="w-1/5">{{ order.user.email }}</p>
+    <p class="w-1/12">{{ order.status }}</p>
+    <p class="w-1/12">{{ order.total }} $</p>
+  </div>
+</template>
 
-</template> -->
 <script setup>
 defineProps({
   order: Object
 })
+
+const formatDate = (dateStr) => {
+  const date = new Date(dateStr)
+  return date.toLocaleDateString('en-GB')
+}
 </script>
-
-<template>
-  <div>
-    <div class="flex items-center justify-between w-full">
-      <div class="flex items-center gap-2 text-center">
-        <input type="checkbox" />
-        <span>{{ order.books.length }} Book(s)</span>
-      </div>
-
-      <p>#{{ order._id.slice(-6) }}</p>
-
-      <p>{{ new Date(order.createdAt).toLocaleDateString() }}</p>
-
-      <div class="flex items-center gap-2">
-        <img src="/images/user.jpg" class="w-10 h-10 rounded-full" alt="" />
-        <p>{{ order.user?.email || 'Unknown' }}</p>
-      </div>
-
-      <p>{{ order.status }}</p>
-      <p>${{ order.total.toFixed(2) }}</p>
-    </div>
-
-    <hr class="border-t-2 border-gray-300 mt-5 mb-10 px-20" />
-  </div>
-</template>
