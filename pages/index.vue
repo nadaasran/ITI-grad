@@ -14,12 +14,9 @@
      <!-- trend books section -->
      <trend />
      <about />
-     
+     <author/>
      <!-- authors section - -->
-     <div class="mb-8">
-       <author />
-     </div>
- 
+     
      <!-- plans section - -->
      <section id="plans" class="px-4 sm:px-6 lg:px-8 bg-[#FFF7EF] py-12  flex items-center justify-center">
        <div class="max-w-6xl mx-auto">
@@ -36,7 +33,7 @@
       <div id="contact">
         <contact />
       </div>
-    <Footer />
+    
    </div>
  </template>
  
@@ -47,6 +44,7 @@
  import SubscriptionCard from '~/components/Subscription Card.vue'
  import contact from '~/components/Contact.vue'
  import footer from '~/components/Footer.vue'
+
  </script>
  
  <style scoped>
