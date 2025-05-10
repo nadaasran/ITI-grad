@@ -1,46 +1,42 @@
-<template>
-    <section class="trending">
-      <h2>Trending Shelf</h2>
-      <div class="book-list">
-        <div v-for="book in books" :key="book.id" class="book-card">
-          <img :src="book.image" :alt="book.title" />
-          <h3>{{ book.title }}</h3>
-          <p>{{ book.discount }}% Off</p>
-        </div>
-      </div>
-    </section>
-  </template>
+<template >
+<div class="">
+      <h2 class="text-3xl font-bold text-yellow-950  mb-4 pl-8">Trending shelf</h2>
+      
+    
+  <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 pl-16 pr-16 ">
+    <bookcard
+      v-for="book in books"
+      :key="book._id"
+      :title="book.title"
+      :author="book.author.name"
+      :image="book.image"
+      :discount="book.discount"
+      :rating="book.rating"
+    />
+  </div>
+</div>
+<div>
+            <img src="/images/woodenShelf.png" alt="shelf" />
+          </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import bookcard from '@/components/bookcard.vue'
+import axios from 'axios'
+
+const books = ref([])
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://localhost:5000/books')
   
-  <script setup>
-  const books = [
-    { id: 1, title: "Kids Drawing Book", image: "/book1.jpg", discount: 15 },
-    { id: 2, title: "Mariana", image: "/book2.jpg", discount: 15 },
-    { id: 3, title: "Love Brings You Home", image: "/book3.jpg", discount: 15 },
-    { id: 4, title: "Roman", image: "/book4.jpg", discount: 15 }
-  ];
-  </script>
-  
-  <style scoped>
-  .trending {
-    text-align: center;
-    padding: 40px 20px;
+    books.value = response.data.data.slice(0, 5)
+  } catch (error) {
+    console.error('حدث خطأ أثناء جلب الكتب:', error)
   }
-  .book-list {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-  }
-  .book-card {
-    background: #fff;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 150px;
-  }
-  .book-card img {
-    width: 100%;
-    border-radius: 8px;
-  }
-  </style>
-  
+})
+
+</script>
+
+ 

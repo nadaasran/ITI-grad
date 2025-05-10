@@ -30,7 +30,9 @@
     </div>
     <button type="submit" class="signup-btn">Sign Up</button>
     <span v-if="errorMessage" class="error">{{ errorMessage }}</span>
+
   </form>
+
           <p class="login-link">
             Already have an account? <NuxtLink to="/login">Log In</NuxtLink>
           </p>
@@ -41,11 +43,13 @@
         </div>
       </div>
     </div>
-  </template>
-
+  </template> -->
+<!-- 
   <script setup>
+
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { useAuthStore } from '@/stores/auth'
 const auth = useAuthStore()
 
@@ -180,7 +184,6 @@ const loginWithGoogle = async () => {
   }
 };
   </script>
-  
    -->
 
    <template>
@@ -206,13 +209,43 @@ const loginWithGoogle = async () => {
               <input type="email" v-model="auth.email" placeholder="Enter your email" />
               <span v-if="emailError" class="error-message">{{ emailError }}</span>
             </div>
-            <div>
-              <label>Password*</label>
-              <input type="password" v-model="auth.password" placeholder="Enter your password" />
-              <span v-if="passwordError" class="error-message">{{ passwordError }}</span>
-            </div>
+            <div class="password-wrapper">
+  <label>Password*</label>
+  <div class="password-input-container">
+    <input
+      :type="showPassword ? 'text' : 'password'"
+      v-model="auth.password"
+      placeholder="Enter your password"
+    />
+    <FontAwesomeIcon
+      :icon="showPassword ? ['fas', 'eye-slash'] : ['fas', 'eye']"
+      class="eye-icon"
+      @click="togglePasswordVisibility"
+    />
+  </div>
+  <span v-if="passwordError" class="error-message">{{ passwordError }}</span>
+  <div class="password-wrapper">
+  <label>Confirm Password*</label>
+  <div class="password-input-container">
+    <input
+      :type="showPassword ? 'text' : 'password'"
+      v-model="confirmPassword"
+      placeholder="Confirm your password"
+    />
+    <FontAwesomeIcon
+      :icon="showPassword ? ['fas', 'eye-slash'] : ['fas', 'eye']"
+      class="eye-icon"
+      @click="togglePasswordVisibility"
+    />
+  </div>
+  <span v-if="confirmPasswordError" class="error-message">{{ confirmPasswordError }}</span>
+</div>
+</div>
             <div class="terms">
-              <input type="checkbox" v-model="auth.agree" /> I agree to all terms, privacy policy
+              <input type="checkbox" v-model="auth.agree" /> 
+              <span>
+                I agree to all terms, privacy policy
+              </span>
             </div>
             <button type="submit" class="signup-btn">Sign Up</button>
             <span v-if="auth.errorMessage" class="error">{{ auth.errorMessage }}</span>
@@ -231,6 +264,9 @@ const loginWithGoogle = async () => {
   </template>
   
   <script setup>
+  definePageMeta({
+  layout: 'default',
+})
   import { useAuthStore } from '@/stores/auth'
   import { useRouter } from 'vue-router'
   import { ref } from 'vue'
@@ -238,9 +274,16 @@ const loginWithGoogle = async () => {
   const auth = useAuthStore()
   const router = useRouter()
   
+const showPassword = ref(false)
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value
+}
   const nameError = ref('')
   const emailError = ref('')
   const passwordError = ref('')
+  const confirmPassword = ref('')
+const confirmPasswordError = ref('')
+
   
   const validateName = () => {
     if (!auth.name) {
@@ -285,19 +328,29 @@ const loginWithGoogle = async () => {
       passwordError.value = ''
     }
   }
+  const validateConfirmPassword = () => {
+  if (!confirmPassword.value) {
+    confirmPasswordError.value = 'Please confirm your password'
+  } else if (confirmPassword.value !== auth.password) {
+    confirmPasswordError.value = 'Passwords do not match'
+  } else {
+    confirmPasswordError.value = ''
+  }
+}
+
   
-  const handleSubmit = async () => {
-    validateName()
-    validatePassword()
-    validateField('email')
-  
-    if (nameError.value || passwordError.value || emailError.value) return
-  
-    if (!auth.agree) {
-      auth.setError("You must agree to the terms!")
-      return
-    }
-  
+const handleSubmit = async () => {
+  validateName()
+  validatePassword()
+  validateField('email')
+  validateConfirmPassword()
+
+  if (nameError.value || passwordError.value || emailError.value || confirmPasswordError.value) return
+
+  if (!auth.agree) {
+    auth.setError("You must agree to the terms!")
+    return
+  }
     try {
       const res = await fetch("http://localhost:5000/auth/register", {
         method: "POST",
@@ -315,6 +368,8 @@ const loginWithGoogle = async () => {
         auth.setError(data.message || "Error signing up!")
         return
       }
+      const token = data.token.split(" ")[1]; // إزالة "Bearer"
+      localStorage.setItem("token", token);
   
       localStorage.setItem('username', auth.name)
       auth.reset()
@@ -325,35 +380,97 @@ const loginWithGoogle = async () => {
   }
   
   const loginWithGoogle = async () => {
-    try {
-      const auth2 = await gapi.auth2.init({
-        client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
-      })
-  
-      const googleUser = await auth2.signIn()
-      const idToken = googleUser.getAuthResponse().id_token
-  
-      const res = await fetch('http://localhost:5000/auth/google', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken }),
-      })
-  
-      const data = await res.json()
-  
-      if (data.success) {
-        localStorage.setItem('token', data.token)
-        router.push('/')
-      } else {
-        auth.setError(data.message || 'Google login failed!')
-      }
-    } catch (error) {
-      auth.setError('Error during Google login')
+  try {
+    const auth2 = await gapi.auth2.init({
+      client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // Make sure this is correct
+    })
+
+    const googleUser = await auth2.signIn()
+    const idToken = googleUser.getAuthResponse().id_token
+
+    const res = await fetch('http://localhost:5000/auth/google', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken }),
+    })
+
+    const data = await res.json()
+
+    if (data.success) {
+      localStorage.setItem('token', data.token)
+      router.push('/')
+    } else {
+      auth.setError(data.message || 'Google login failed!')
     }
+  } catch (error) {
+    auth.setError('Error during Google login')
+    console.error("Google login error:", error) // To debug any issues
   }
+}
   </script>
+
+
   
   <style scoped>
+  @media (max-width: 768px) {
+  .signup-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 10px;
+    margin-top: -60px;
+  }
+
+  .signup-box {
+    flex-direction: column;
+    padding: 20px 15px;
+    width: 100%;
+    max-width: 400px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .signup-form {
+    padding: 0;
+    width: 100%;
+  }
+
+  .illustration {
+    display: none;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  input {
+    font-size: 14px;
+  }
+
+  .google-btn,
+  .signup-btn {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .terms {
+    font-size: 14px;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .error-message {
+    font-size: 13px;
+  }
+
+  .login-link {
+    font-size: 12px;
+  }
+  .illustration img{
+    display: none;
+  }
+}
+
  .error-message {
   color: red;
   font-size: 14px;
@@ -361,6 +478,9 @@ const loginWithGoogle = async () => {
   opacity: 1;
   transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
   max-height: 50px;
+  display: flex;
+  justify-content: left;
+
 }
 
 .error-message:empty {
@@ -371,19 +491,21 @@ const loginWithGoogle = async () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     background: #4e342e; 
     color: #2e1e1e;
     font-family: "Arial", sans-serif;
   }
   
   .signup-box {
+    margin-top: 20px;
+    margin-bottom: 20px;
     background: #fdf6e3; 
     display: flex;
     padding: 20px;
     border-radius: 20px;
     width: 80%;
-    min-height: 90%;
+    min-height: 100%;
     text-align: center;
     transition: min-height 0.3s ease-in-out;
     max-width: 80%;
@@ -400,35 +522,54 @@ const loginWithGoogle = async () => {
     margin-bottom: 20px;
     color: #3e2723;
   }
-  
-  .google-btn {
-  background:  #FAD4A2;
-  color: #3e2723;
-  padding: 12px;
-  width: 100%;
-  border: none;
-  border-radius:40px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 14px;
+  .password-input-container {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
 }
-.google-btn:hover {
-    color:#FAD4A2 ;
-    background-color: #4E3629;
+
+.password-input-container input {
+  width: 100%;
+  padding-right: 40px;
 }
+
+.eye-icon {
+  position: absolute;
+  right: 16px;
+  top: 40%;
+  cursor: pointer;
+  color: #3e2723;
+  /* font-size: 18px; */
+  width: 20px;
+  height: 15px;
+
+}
+
   
-  .google-btn .google-icon {
+  .google-btn {
+    background: #fad4a2;
+    color: #3e2723;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .google-btn:hover {
+    color: #fad4a2;
+    background-color: #4e3629;
+  }
+  
+  .google-icon {
     font-size: 18px;
     color: #3e2723;
   }
-
-.google-icon {
-  font-size: 18px;
-}
   
   .divider {
     margin: 15px 0;
@@ -461,6 +602,7 @@ const loginWithGoogle = async () => {
     font-size: 14px;
     margin-top: 10px;
     font-weight: bold;
+    color: #3e2723;
   }
   
   input {
@@ -469,15 +611,15 @@ const loginWithGoogle = async () => {
     border: 1px solid #b29583;
     border-radius: 40px;
     margin-top: 5px;
-    background:none;
+    background: none;
+    color: #3e2723;
   }
   
   .terms {
     display: flex;
-
     justify-content:flex-start;
     font-size: 16px;
-    margin-top: 15px; 
+    margin-top: 15px;
     color: #3e2723;
   }
   
@@ -485,18 +627,18 @@ const loginWithGoogle = async () => {
     margin-right: 5px;
     cursor: pointer;
     width: 16px;
-    background-color: #8d6e63;
+    background: none;
    
   }
-  span{
+  
+  span {
     margin-left: 5px;
     margin-top: 5px;
   }
   
   .signup-btn {
     background: #3e2723;
-    color: #FAD4A2;
-    font-family: links;
+    color: #fad4a2;
     padding: 12px;
     width: 100%;
     border: none;
@@ -509,7 +651,8 @@ const loginWithGoogle = async () => {
   
   .signup-btn:hover {
     background-color:#FAD4A2 ;
-    color: #4E3629;  }
+    color: #4E3629; 
+   }
   
   .login-link {
     font-size: 13px;
